@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GenGuardian Portugal — Generator Monitoring</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #0a0b0c;
+      --bg2:       #111315;
+      --bg3:       #181b1e;
+      --border:    #2a2e33;
+      --amber:     #f5a623;
+      --amber-dim: #b87a1a;
+      --red:       #e03c3c;
+      --green:     #2ecc71;
+      --text:      #d6dde5;
+      --muted:     #6b7580;
+      --mono:      'Share Tech Mono', monospace;
+      --head:      'Barlow Condensed', sans-serif;
+      --body:      'Barlow', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.35;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(10,11,12,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--head);
+      font-weight: 800;
+      font-size: 1.35rem;
+      letter-spacing: 0.06em;
+      color: #fff;
+      text-decoration: none;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+
+    .nav-logo .dot {
+      width: 10px; height: 10px;
+      background: var(--amber);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245,166,35,0.7); }
+      50%       { box-shadow: 0 0 0 6px rgba(245,166,35,0); }
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+
+    .lang-toggle {
+      display: flex;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .lang-toggle button {
+      padding: 0.3rem 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-toggle button.active {
+      background: var(--amber);
+      color: #000;
+      font-weight: 700;
+    }
+
+    .nav-cta {
+      padding: 0.45rem 1.2rem;
+      background: var(--amber);
+      color: #000;
+      font-family: var(--head);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: background 0.2s;
+    }
+
+    .nav-cta:hover { background: #ffc04d; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 64px 2.5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Grid lines background */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(245,166,35,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,166,35,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
+    }
+
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 4rem;
+      align-items: center;
+      position: relative; z-index: 1;
+    }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: var(--amber);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 1px;
+      background: var(--amber);
+    }
+
+    h1 {
+      font-family: var(--head);
+      font-weight: 800;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      color: #fff;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--amber);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-primary {
+      padding: 0.85rem 2rem;
+      background: var(--amber);
+      color: #000;
+      font-family: var(--head);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none; border-radius: 3px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover { background: #ffc04d; transform: translateY(-1px); }
+
+    .btn-secondary {
+      padding: 0.85rem 2rem;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--head);
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { border-color: var(--amber); color: var(--amber); }
+
+    /* Status panel */
+    .status-panel {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .status-panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.2rem;
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .status-live {
+      display: flex; align-items: center; gap: 0.4rem;
+      color: var(--green);
+      font-size: 0.68rem;
+    }
+
+    .status-live::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse-green 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-green {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    .status-rows { padding: 1rem 1.2rem; display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .status-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+
+    .status-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .status-label { color: var(--muted); font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; }
+
+    .status-val { font-weight: 500; color: var(--text); }
+
+    .status-val.ok   { color: var(--green); }
+    .status-val.warn { color: var(--amber); }
+    .status-val.bad  { color: var(--red); }
+
+    .alert-banner {
+      margin: 0 1.2rem 1.2rem;
+      padding: 0.75rem 1rem;
+      background: rgba(224,60,60,0.1);
+      border: 1px solid rgba(224,60,60,0.3);
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--red);
+      letter-spacing: 0.04em;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+
+    .alert-banner::before { content: '⚠'; font-size: 0.9rem; }
+
+    /* ── BLACKOUT BANNER ── */
+    .blackout-banner {
+      background: rgba(224,60,60,0.06);
+      border-top: 1px solid rgba(224,60,60,0.2);
+      border-bottom: 1px solid rgba(224,60,60,0.2);
+      padding: 1.5rem 2.5rem;
+      text-align: center;
+    }
+
+    .blackout-inner {
+      max-width: 900px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center;
+      gap: 3rem; flex-wrap: wrap;
+    }
+
+    .blackout-stat { text-align: center; }
+
+    .blackout-stat .num {
+      font-family: var(--head);
+      font-weight: 800;
+      font-size: 2.4rem;
+      color: var(--red);
+      line-height: 1;
+      display: block;
+    }
+
+    .blackout-stat .lbl {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    .blackout-divider { width: 1px; height: 40px; background: var(--border); }
+
+    .blackout-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: rgba(224,60,60,0.7);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 6rem 2.5rem; }
+
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+
+    .section-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      color: var(--amber);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+
+    .section-tag::before { content: '//'; opacity: 0.5; }
+
+    h2 {
+      font-family: var(--head);
+      font-weight: 800;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    h2 em { font-style: normal; color: var(--amber); }
+
+    .section-lead {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 3.5rem;
+      font-weight: 300;
+      line-height: 1.75;
+    }
+
+    /* ── PROBLEM CARDS ── */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .problem-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2rem;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+
+    .problem-card:hover { border-color: var(--amber-dim); }
+
+    .problem-card .icon {
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+
+    .problem-card h3 {
+      font-family: var(--head);
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #fff;
+      margin-bottom: 0.6rem;
+    }
+
+    .problem-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    .problem-card .badge {
+      position: absolute; top: 1rem; right: 1rem;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+
+    .badge-red   { background: rgba(224,60,60,0.15); color: var(--red); border: 1px solid rgba(224,60,60,0.3); }
+    .badge-amber { background: rgba(245,166,35,0.1);  color: var(--amber); border: 1px solid rgba(245,166,35,0.25); }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+
+    .step {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 2rem;
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .step:last-child { border-bottom: none; }
+
+    .step-num {
+      font-family: var(--head);
+      font-weight: 800;
+      font-size: 3.5rem;
+      color: var(--border);
+      line-height: 1;
+      position: relative;
+    }
+
+    .step:hover .step-num { color: var(--amber-dim); transition: color 0.3s; }
+
+    .step-content h3 {
+      font-family: var(--head);
+      font-weight: 700;
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      margin-top: 0.6rem;
+    }
+
+    .step-content p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-width: 520px; }
+
+    .step-content .mono-detail {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--amber);
+      letter-spacing: 0.06em;
+      margin-top: 0.75rem;
+    }
+
+    /* ── WHY GENGUARDIAN ── */
+    .why-bg { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .why-card {
+      padding: 1.75rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      transition: all 0.25s;
+    }
+
+    .why-card:hover { border-color: var(--amber); transform: translateY(-2px); }
+
+    .why-card .why-icon {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .why-card h3 {
+      font-family: var(--head);
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .why-card p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── COMPARISON TABLE ── */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-top: 2rem;
+    }
+
+    .comp-table th {
+      font-family: var(--head);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 1rem 1.5rem;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+      color: var(--muted);
+    }
+
+    .comp-table th.highlight { color: var(--amber); border-bottom-color: var(--amber); }
+
+    .comp-table td {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .comp-table tr:last-child td { border-bottom: none; }
+
+    .comp-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .comp-table td:first-child { font-weight: 500; color: var(--text); }
+
+    .check { color: var(--green); font-size: 1.1rem; }
+    .cross { color: var(--red); font-size: 1.1rem; }
+    .partial { color: var(--amber); font-size: 0.8rem; }
+
+    /* ── PRICING ── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      max-width: 720px;
+    }
+
+    .pricing-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2.5rem;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--amber);
+      position: relative;
+    }
+
+    .pricing-card.featured::before {
+      content: attr(data-badge);
+      position: absolute; top: -1px; right: 1.5rem;
+      background: var(--amber);
+      color: #000;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 0 0 4px 4px;
+    }
+
+    .pricing-amount {
+      font-family: var(--head);
+      font-weight: 800;
+      font-size: 3rem;
+      color: #fff;
+      line-height: 1;
+      margin: 1rem 0 0.25rem;
+    }
+
+    .pricing-amount span {
+      font-size: 1.2rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .pricing-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .pricing-features li {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+
+    .pricing-features li::before { content: '→'; color: var(--amber); font-size: 0.8rem; }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .contact-info h3 {
+      font-family: var(--head);
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-info p { font-size: 0.88rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.65; }
+
+    .contact-detail {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 1rem 1.2rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+      font-size: 0.88rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+
+    .contact-detail:hover { border-color: var(--amber); }
+
+    .contact-detail .cd-icon { font-size: 1rem; }
+    .contact-detail .cd-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 0.1rem; }
+    .contact-detail .cd-val { font-size: 0.88rem; }
+
+    /* Form */
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+
+    .form-group label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--amber); }
+
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    .form-group select option { background: var(--bg2); }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .submit-btn {
+      padding: 0.9rem 2rem;
+      background: var(--amber);
+      color: #000;
+      font-family: var(--head);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .submit-btn:hover { background: #ffc04d; }
+
+    .form-note {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-top: 0.25rem;
+    }
+
+    /* Success state */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--bg2);
+      border: 1px solid var(--green);
+      border-radius: 6px;
+    }
+
+    .form-success .success-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+
+    .form-success h3 {
+      font-family: var(--head);
+      font-weight: 700;
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-success p { font-size: 0.88rem; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: var(--head);
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.06em;
+      color: #fff;
+    }
+
+    .footer-meta {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .footer-legal {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .status-panel { display: none; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+      .comp-table { font-size: 0.78rem; }
+      .comp-table th, .comp-table td { padding: 0.75rem; }
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1.25rem; }
+      section { padding: 4rem 1.25rem; }
+      .hero { padding: 64px 1.25rem 0; }
+      .blackout-banner { padding: 1.5rem 1.25rem; }
+      .blackout-divider { display: none; }
+      footer { padding: 1.5rem 1.25rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── HIDDEN LANG ── */
+    [data-lang] { display: none; }
+    .lang-en [data-lang="en"] { display: block; }
+    .lang-pt [data-lang="pt"] { display: block; }
+    span[data-lang] { display: none; }
+    .lang-en span[data-lang="en"] { display: inline; }
+    .lang-pt span[data-lang="pt"] { display: inline; }
+    td[data-lang], th[data-lang] { display: none; }
+    .lang-en td[data-lang="en"] { display: table-cell; }
+    .lang-pt td[data-lang="pt"] { display: table-cell; }
+    li[data-lang] { display: none; }
+    .lang-en li[data-lang="en"] { display: flex; }
+    .lang-pt li[data-lang="pt"] { display: flex; }
+  </style>
+</head>
+<body class="lang-en">
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="dot"></span>
+    GenGuardian
+  </a>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="active" onclick="setLang('en')">EN</button>
+      <button onclick="setLang('pt')">PT</button>
+    </div>
+    <a href="#contact" class="nav-cta">
+      <span data-lang="en">Book a Call</span>
+      <span data-lang="pt">Agendar Reunião</span>
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-copy fade-up">
+      <div class="hero-tag">
+        <span data-lang="en">Generator Monitoring · Portugal</span>
+        <span data-lang="pt">Monitorização de Geradores · Portugal</span>
+      </div>
+      <h1 data-lang="en">Your Generator<br><em>Starts.</em><br>Every Time.</h1>
+      <h1 data-lang="pt">O Seu Gerador<br><em>Arranca.</em><br>Sempre.</h1>
+      <p class="hero-sub" data-lang="en">Real-time SIM-based IoT monitoring for standby generators. Fully independent of building WiFi and power — works precisely when everything else fails.</p>
+      <p class="hero-sub" data-lang="pt">Monitorização IoT em tempo real via SIM para geradores de emergência. Totalmente independente da rede WiFi e energia do edifício — funciona exactamente quando tudo o resto falha.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">
+          <span data-lang="en">Book a Call →</span>
+          <span data-lang="pt">Agendar Reunião →</span>
+        </a>
+        <a href="#how-it-works" class="btn-secondary">
+          <span data-lang="en">See How It Works</span>
+          <span data-lang="pt">Como Funciona</span>
+        </a>
+      </div>
+    </div>
+    <!-- Status panel mockup -->
+    <div class="status-panel fade-up" style="animation-delay:0.2s">
+      <div class="status-panel-header">
+        <span>UNIT-0042 · HOTEL LISBOA</span>
+        <span class="status-live">LIVE</span>
+      </div>
+      <div class="status-rows">
+        <div class="status-row">
+          <span class="status-label">GENERATOR STATUS</span>
+          <span class="status-val ok">● STANDBY READY</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">LAST TEST RUN</span>
+          <span class="status-val">14 Apr · 03:00</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">FUEL LEVEL</span>
+          <span class="status-val warn">⚠ 34%</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">BATTERY VOLTAGE</span>
+          <span class="status-val ok">12.8V</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">SIGNAL</span>
+          <span class="status-val ok">4G · –72 dBm</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">UPTIME</span>
+          <span class="status-val">99.97% · 180d</span>
+        </div>
+      </div>
+      <div class="alert-banner">FAULT DETECTED · SMS DISPATCHED · 09:14:22</div>
+    </div>
+  </div>
+</section>
+
+<!-- BLACKOUT BANNER -->
+<div class="blackout-banner">
+  <div class="blackout-label" data-lang="en">April 28, 2025 — Iberian Blackout</div>
+  <div class="blackout-label" data-lang="pt">28 de Abril de 2025 — Apagão Ibérico</div>
+  <div class="blackout-inner">
+    <div class="blackout-stat">
+      <span class="num">58M</span>
+      <span class="lbl" data-lang="en">People Affected</span>
+      <span class="lbl" data-lang="pt">Pessoas Afectadas</span>
+    </div>
+    <div class="blackout-divider"></div>
+    <div class="blackout-stat">
+      <span class="num">€2B</span>
+      <span class="lbl" data-lang="en">Losses to PT Businesses</span>
+      <span class="lbl" data-lang="pt">Perdas para Empresas PT</span>
+    </div>
+    <div class="blackout-divider"></div>
+    <div class="blackout-stat">
+      <span class="num">1,710</span>
+      <span class="lbl" data-lang="en">Businesses Surveyed (AIP)</span>
+      <span class="lbl" data-lang="pt">Empresas Inquiridas (AIP)</span>
+    </div>
+    <div class="blackout-divider"></div>
+    <div class="blackout-stat">
+      <span class="num">0</span>
+      <span class="lbl" data-lang="en">GenGuardian Failures</span>
+      <span class="lbl" data-lang="pt">Falhas GenGuardian</span>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="section-inner">
+    <div class="section-tag" data-lang="en">The Problem</div>
+    <div class="section-tag" data-lang="pt">O Problema</div>
+    <h2 data-lang="en">Silent <em>Failures</em><br>Cost Everything</h2>
+    <h2 data-lang="pt">Falhas <em>Silenciosas</em><br>Custam Tudo</h2>
+    <p class="section-lead" data-lang="en">Hospitals, hotels, and commercial buildings are legally required to have backup generators. But nobody's watching them — until the power goes out and they don't start.</p>
+    <p class="section-lead" data-lang="pt">Hospitais, hotéis e edifícios comerciais são legalmente obrigados a ter geradores de emergência. Mas ninguém os monitoriza — até à próxima falha de energia.</p>
+    <div class="problem-grid">
+      <div class="problem-card fade-up">
+        <span class="badge badge-red" data-lang="en">Legal Risk</span>
+        <span class="badge badge-red" data-lang="pt">Risco Legal</span>
+        <span class="icon">⚖️</span>
+        <h3 data-lang="en">Mandatory Compliance</h3>
+        <h3 data-lang="pt">Obrigatoriedade Legal</h3>
+        <p data-lang="en">Artigo 72º, Portaria 1532/2008 (RT-SCIE) mandates emergency backup power in hotels, hospitals, and large commercial buildings. Non-compliance is a liability.</p>
+        <p data-lang="pt">O Artigo 72º, Portaria 1532/2008 (RT-SCIE) exige alimentação de emergência em hotéis, hospitais e edifícios comerciais. O incumprimento é uma responsabilidade legal.</p>
+      </div>
+      <div class="problem-card fade-up">
+        <span class="badge badge-amber" data-lang="en">Hidden Risk</span>
+        <span class="badge badge-amber" data-lang="pt">Risco Oculto</span>
+        <span class="icon">🔇</span>
+        <h3 data-lang="en">Silent Generator Failure</h3>
+        <h3 data-lang="pt">Falha Silenciosa</h3>
+        <p data-lang="en">Generators sit idle for months. Battery dies. Fuel degrades. Nobody notices — until a blackout reveals the generator won't start.</p>
+        <p data-lang="pt">Os geradores ficam parados durante meses. A bateria descarrega. O combustível degrada-se. Ninguém nota — até um apagão revelar que o gerador não arranca.</p>
+      </div>
+      <div class="problem-card fade-up">
+        <span class="badge badge-red" data-lang="en">Blind Spot</span>
+        <span class="badge badge-red" data-lang="pt">Ponto Cego</span>
+        <span class="icon">📡</span>
+        <h3 data-lang="en">WiFi Monitoring Fails</h3>
+        <h3 data-lang="pt">WiFi Falha no Momento Certo</h3>
+        <p data-lang="en">OEM monitoring systems (Generac, etc.) run over building WiFi. During a blackout — when you need them most — they go offline too.</p>
+        <p data-lang="pt">Os sistemas de monitorização OEM (Generac, etc.) usam o WiFi do edifício. Durante um apagão — quando mais precisa deles — também ficam sem sinal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="section-inner">
+    <div class="section-tag" data-lang="en">Solution</div>
+    <div class="section-tag" data-lang="pt">Solução</div>
+    <h2 data-lang="en">How <em>GenGuardian</em><br>Works</h2>
+    <h2 data-lang="pt">Como o <em>GenGuardian</em><br>Funciona</h2>
+    <p class="section-lead" data-lang="en">Three steps. No infrastructure changes. Works on any generator, any brand, any age.</p>
+    <p class="section-lead" data-lang="pt">Três passos. Sem alterações na infraestrutura. Funciona em qualquer gerador, de qualquer marca, de qualquer idade.</p>
+    <div class="steps">
+      <div class="step fade-up">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h3 data-lang="en">Install the Device</h3>
+          <h3 data-lang="pt">Instalar o Dispositivo</h3>
+          <p data-lang="en">Our own state of the art IoT unit is wired to your generator. No WiFi. No internet connection required at the building level. Takes under an hour.</p>
+          <p data-lang="pt">Um compacto dispositivo IoT Teltonika FMC234 é ligado directamente ao painel de controlo do gerador. Sem WiFi. Sem necessidade de ligação à internet no edifício. Demora menos de uma hora.</p>
+          <span class="mono-detail">⚡ Weather Proof · 4G LTE · Internal Battery</span>
+        </div>
+      </div>
+      <div class="step fade-up">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h3 data-lang="en">Monitor in Real Time</h3>
+          <h3 data-lang="pt">Monitorização em Tempo Real</h3>
+          <p data-lang="en">The device transmits generator status over its own cellular SIM — completely independent of building power and WiFi. Battery backup ensures it keeps transmitting even during a total power failure.</p>
+          <p data-lang="pt">O dispositivo transmite o estado do gerador através do seu próprio SIM celular — completamente independente da energia e WiFi do edifício. A bateria interna garante transmissão mesmo durante uma falha total de energia.</p>
+          <span class="mono-detail">📶 Cellular SIM · 130+ Countries · No Roaming</span>
+        </div>
+      </div>
+      <div class="step fade-up">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h3 data-lang="en">Instant Fault Alerts</h3>
+          <h3 data-lang="pt">Alertas Imediatos de Falha</h3>
+          <p data-lang="en">The moment a fault is detected — generator won't start, low fuel, battery failure — your contracted service company receives an automatic SMS and voice alert. They're dispatched before you even know there's a problem.</p>
+          <p data-lang="pt">No momento em que uma falha é detectada — gerador não arranca, baixo combustível, falha de bateria — a empresa de serviço contratada recebe automaticamente um SMS e alerta de voz. A equipa é despachada antes de saber que há um problema.</p>
+          <span class="mono-detail">📱 Automatic SMS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY GENGUARDIAN -->
+<section class="why-bg" id="why">
+  <div class="section-inner">
+    <div class="section-tag" data-lang="en">Why GenGuardian</div>
+    <div class="section-tag" data-lang="pt">Porquê GenGuardian</div>
+    <h2 data-lang="en">Built on <em>Proven</em><br>Experience</h2>
+    <h2 data-lang="pt">Construído com<br><em>Experiência Comprovada</em></h2>
+    <p class="section-lead" data-lang="en">This isn't a new idea. It's a proven Canadian business model brought to Portugal — with 1,800 monitored units and a successful exit behind it.</p>
+    <p class="section-lead" data-lang="pt">Isto não é uma nova ideia. É um modelo de negócio canadiano comprovado trazido para Portugal — com 1.800 unidades monitorizadas e uma saída bem-sucedida.</p>
+    <div class="why-grid">
+      <div class="why-card fade-up">
+        <div class="why-icon">📡</div>
+        <h3 data-lang="en">SIM-Independent</h3>
+        <h3 data-lang="pt">Independente de WiFi</h3>
+        <p data-lang="en">Runs on its own cellular SIM with internal battery. Works precisely when building power and WiFi are down.</p>
+        <p data-lang="pt">Funciona com SIM celular próprio e bateria interna. Opera exactamente quando a energia e o WiFi do edifício estão em baixo.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon">🔌</div>
+        <h3 data-lang="en">Brand Agnostic</h3>
+        <h3 data-lang="pt">Agnóstico de Marca</h3>
+        <p data-lang="en">Works on any generator, any brand, any age. No infrastructure changes, no manufacturer lock-in.</p>
+        <p data-lang="pt">Funciona em qualquer gerador, de qualquer marca, de qualquer idade. Sem alterações na infraestrutura, sem dependência de fabricante.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon">⚖️</div>
+        <h3 data-lang="en">Legal Mandate</h3>
+        <h3 data-lang="pt">Mandato Legal</h3>
+        <p data-lang="en">RT-SCIE (Portaria 1532/2008) creates a legally required market. We serve buildings that must comply.</p>
+        <p data-lang="pt">O RT-SCIE (Portaria 1532/2008) cria um mercado legalmente obrigatório. Servimos edifícios que devem cumprir.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon">💶</div>
+        <h3 data-lang="en">Simple Pricing</h3>
+        <h3 data-lang="pt">Preços Simples</h3>
+        <p data-lang="en">€30/month per unit. No surprise fees. Hardware payback in under 5 months. Transparent recurring model.</p>
+        <p data-lang="pt">€30/mês por unidade. Sem taxas surpresa. Retorno do hardware em menos de 5 meses. Modelo recorrente transparente.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon">🏙️</div>
+        <h3 data-lang="en">Lisbon-First</h3>
+        <h3 data-lang="pt">Foco em Lisboa</h3>
+        <p data-lang="en">Deep local presence, Portuguese business relationships, and on-the-ground installation capability from day one.</p>
+        <p data-lang="pt">Forte presença local, relações comerciais portuguesas e capacidade de instalação no terreno desde o primeiro dia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section id="comparison">
+  <div class="section-inner">
+    <div class="section-tag" data-lang="en">Comparison</div>
+    <div class="section-tag" data-lang="pt">Comparação</div>
+    <h2 data-lang="en">Why Nothing<br><em>Else Works</em></h2>
+    <h2 data-lang="pt">Porque Nada<br><em>Mais Funciona</em></h2>
+    <div style="overflow-x:auto">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th data-lang="en">Feature</th>
+            <th data-lang="pt">Funcionalidade</th>
+            <th class="highlight">GenGuardian</th>
+            <th data-lang="en">WiFi Monitoring</th>
+            <th data-lang="en">Manual Checks</th>
+            <th data-lang="pt">Monitorização WiFi</th>
+            <th data-lang="pt">Verificações Manuais</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-lang="en">Works during a blackout</td>
+            <td data-lang="pt">Funciona durante apagão</td>
+            <td><span class="check">✓</span></td>
+            <td data-lang="en"><span class="cross">✗</span></td>
+            <td data-lang="en"><span class="cross">✗</span></td>
+            <td data-lang="pt"><span class="cross">✗</span></td>
+            <td data-lang="pt"><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td data-lang="en">Real-time fault alerts</td>
+            <td data-lang="pt">Alertas de falha em tempo real</td>
+            <td><span class="check">✓</span></td>
+            <td data-lang="en"><span class="partial">Partial</span></td>
+            <td data-lang="en"><span class="cross">✗</span></td>
+            <td data-lang="pt"><span class="partial">Parcial</span></td>
+            <td data-lang="pt"><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td data-lang="en">Brand agnostic</td>
+            <td data-lang="pt">Agnóstico de marca</td>
+            <td><span class="check">✓</span></td>
+            <td data-lang="en"><span class="cross">✗</span></td>
+            <td data-lang="en"><span class="check">✓</span></td>
+            <td data-lang="pt"><span class="cross">✗</span></td>
+            <td data-lang="pt"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td data-lang="en">No infrastructure changes</td>
+            <td data-lang="pt">Sem alterações na infraestrutura</td>
+            <td><span class="check">✓</span></td>
+            <td data-lang="en"><span class="cross">✗</span></td>
+            <td data-lang="en"><span class="check">✓</span></td>
+            <td data-lang="pt"><span class="cross">✗</span></td>
+            <td data-lang="pt"><span class="check">✓</span></td>
+          </tr>
+          <tr>
+            <td data-lang="en">Automatic service dispatch</td>
+            <td data-lang="pt">Despacho automático de serviço</td>
+            <td><span class="check">✓</span></td>
+            <td data-lang="en"><span class="cross">✗</span></td>
+            <td data-lang="en"><span class="cross">✗</span></td>
+            <td data-lang="pt"><span class="cross">✗</span></td>
+            <td data-lang="pt"><span class="cross">✗</span></td>
+          </tr>
+          <tr>
+            <td data-lang="en">Predictable monthly cost</td>
+            <td data-lang="pt">Custo mensal previsível</td>
+            <td><span class="check">✓</span></td>
+            <td data-lang="en"><span class="partial">Varies</span></td>
+            <td data-lang="en"><span class="cross">✗</span></td>
+            <td data-lang="pt"><span class="partial">Variável</span></td>
+            <td data-lang="pt"><span class="cross">✗</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-tag" data-lang="en">Pricing</div>
+    <div class="section-tag" data-lang="pt">Preços</div>
+    <h2 data-lang="en">Simple,<br><em>Transparent</em> Pricing</h2>
+    <h2 data-lang="pt">Preços Simples<br>e <em>Transparentes</em></h2>
+    <p class="section-lead" data-lang="en">One device. One monthly fee. No hidden costs.</p>
+    <p class="section-lead" data-lang="pt">Um dispositivo. Uma mensalidade. Sem custos ocultos.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="section-tag" style="margin-bottom:0.5rem" data-lang="en">One-Time</div>
+        <div class="section-tag" style="margin-bottom:0.5rem" data-lang="pt">Único</div>
+        <div class="pricing-amount">€120<span data-lang="en">–€150</span><span data-lang="pt">–€150</span></div>
+        <div class="pricing-label" data-lang="en">Installation Fee</div>
+        <div class="pricing-label" data-lang="pt">Taxa de Instalação</div>
+        <ul class="pricing-features">
+          <li data-lang="en">Hardware supply & wiring</li>
+          <li data-lang="pt">Fornecimento e cablagem do hardware</li>
+          <li data-lang="en">SIM activation</li>
+          <li data-lang="pt">Activação do SIM</li>
+          <li data-lang="en">Dashboard onboarding</li>
+          <li data-lang="pt">Configuração no dashboard</li>
+          <li data-lang="en">Under 1hr on-site</li>
+          <li data-lang="pt">Menos de 1h no local</li>
+        </ul>
+      </div>
+      <div class="pricing-card featured" data-badge="Per Unit">
+        <div class="section-tag" style="margin-bottom:0.5rem" data-lang="en">Monthly</div>
+        <div class="section-tag" style="margin-bottom:0.5rem" data-lang="pt">Mensal</div>
+        <div class="pricing-amount">€30<span data-lang="en">/mo</span><span data-lang="pt">/mês</span></div>
+        <div class="pricing-label" data-lang="en">Per Monitored Unit</div>
+        <div class="pricing-label" data-lang="pt">Por Unidade Monitorizada</div>
+        <ul class="pricing-features">
+          <li data-lang="en">24/7 real-time monitoring</li>
+          <li data-lang="pt">Monitorização 24/7 em tempo real</li>
+          <li data-lang="en">Cellular SIM data included</li>
+          <li data-lang="pt">Dados SIM celular incluídos</li>
+          <li data-lang="en">Automatic SMS + voice alerts</li>
+          <li data-lang="pt">SMS automático + alertas de voz</li>
+          <li data-lang="en">Dashboard access</li>
+          <li data-lang="pt">Acesso ao dashboard</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-tag" data-lang="en">Contact</div>
+    <div class="section-tag" data-lang="pt">Contacto</div>
+    <h2 data-lang="en">Let's <em>Talk</em></h2>
+    <h2 data-lang="pt">Vamos <em>Falar</em></h2>
+    <div class="contact-grid">
+      <div class="contact-info fade-up">
+        <h3 data-lang="en">Book a Call or Send a Message</h3>
+        <h3 data-lang="pt">Agendar uma Reunião ou Enviar Mensagem</h3>
+        <p data-lang="en">Whether you manage a hotel, hospital, commercial building, or you're a generator service company — we'd like to talk. No pressure, no sales deck. Just a 20-minute conversation.</p>
+        <p data-lang="pt">Seja gestor de hotel, hospital, edifício comercial, ou empresa de serviços de geradores — queremos conversar. Sem pressão. Apenas uma conversa de 20 minutos.</p>
+        <a href="mailto:miguel@genguardian.pt" class="contact-detail">
+          <span class="cd-icon">✉</span>
+          <div>
+            <span class="cd-label">Email</span>
+            <span class="cd-val">miguel@genguardian.pt</span>
+          </div>
+        </a>
+        <a href="https://a1generators.ca" target="_blank" class="contact-detail">
+          <span class="cd-icon">🌐</span>
+          <div>
+            <span class="cd-label" data-lang="en">VAT Number</span>
+            <span class="cd-label" data-lang="pt">VAT Número</span>
+            <span class="cd-val">518072371</span>
+          </div>
+        </a>
+        <div class="contact-detail">
+          <span class="cd-icon">📍</span>
+          <div>
+            <span class="cd-label" data-lang="en">Location</span>
+            <span class="cd-label" data-lang="pt">Localização</span>
+            <span class="cd-val" data-lang="en">Lisboa, Portugal</span>
+            <span class="cd-val" data-lang="pt">Lisboa, Portugal</span>
+          </div>
+        </div>
+      </div>
+      <div class="fade-up">
+        <div class="contact-form" id="contactForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label data-lang="en">Name</label>
+              <label data-lang="pt">Nome</label>
+              <input type="text" id="fname" placeholder="João Silva" />
+            </div>
+            <div class="form-group">
+              <label data-lang="en">Company</label>
+              <label data-lang="pt">Empresa</label>
+              <input type="text" id="fcompany" placeholder="Hotel Lisboa" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="femail" placeholder="joao@empresa.pt" />
+          </div>
+          <div class="form-group">
+            <label data-lang="en">I am a...</label>
+            <label data-lang="pt">Sou um(a)...</label>
+            <select id="frole">
+              <option value="" data-lang="en">Select type...</option>
+              <option value="" data-lang="pt">Seleccionar tipo...</option>
+              <option value="hotel" data-lang="en">Hotel / Hospitality</option>
+              <option value="hotel" data-lang="pt">Hotel / Hospitalidade</option>
+              <option value="hospital" data-lang="en">Hospital / Healthcare</option>
+              <option value="hospital" data-lang="pt">Hospital / Saúde</option>
+              <option value="commercial" data-lang="en">Commercial Building</option>
+              <option value="commercial" data-lang="pt">Edifício Comercial</option>
+              <option value="service" data-lang="en">Generator Service Company</option>
+              <option value="service" data-lang="pt">Empresa de Serviços de Geradores</option>
+              <option value="other" data-lang="en">Other</option>
+              <option value="other" data-lang="pt">Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-lang="en">Message (optional)</label>
+            <label data-lang="pt">Mensagem (opcional)</label>
+            <textarea id="fmessage" placeholder="..."></textarea>
+          </div>
+          <button class="submit-btn" onclick="submitForm()">
+            <span data-lang="en">Send Message →</span>
+            <span data-lang="pt">Enviar Mensagem →</span>
+          </button>
+          <p class="form-note" data-lang="en">We'll respond within 1 business day.</p>
+          <p class="form-note" data-lang="pt">Respondemos em 1 dia útil.</p>
+        </div>
+        <div class="form-success" id="formSuccess">
+          <div class="success-icon">✓</div>
+          <h3 data-lang="en">Message Sent</h3>
+          <h3 data-lang="pt">Mensagem Enviada</h3>
+          <p data-lang="en">We'll be in touch within 1 business day.</p>
+          <p data-lang="pt">Entraremos em contacto em 1 dia útil.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">GENGUARDIAN · PORTUGAL</div>
+  <div class="footer-meta">
+    <span data-lang="en">Powered by A1 Generators · 1,800 units monitored</span>
+    <span data-lang="pt">Desenvolvido pela A1 Generators · 1.800 unidades monitorizadas</span>
+  </div>
+  <div class="footer-legal">
+    <span data-lang="en">© 2025 GenGuardian Portugal · RT-SCIE compliant solutions · Lisboa</span>
+    <span data-lang="pt">© 2025 GenGuardian Portugal · Soluções conformes RT-SCIE · Lisboa</span>
+  </div>
+</footer>
+
+<script>
+  // Language toggle
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.querySelectorAll('.lang-toggle button').forEach((btn, i) => {
+      btn.classList.toggle('active', (i === 0 && lang === 'en') || (i === 1 && lang === 'pt'));
+    });
+  }
+
+  // Intersection Observer for fade-up
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Form submit (mailto fallback — swap for Formspree/Netlify Forms in production)
+  function submitForm() {
+    const name    = document.getElementById('fname').value.trim();
+    const company = document.getElementById('fcompany').value.trim();
+    const email   = document.getElementById('femail').value.trim();
+    const role    = document.getElementById('frole').value;
+    const msg     = document.getElementById('fmessage').value.trim();
+
+    if (!name || !email) {
+      alert(document.body.classList.contains('lang-pt') ? 'Por favor preencha o nome e email.' : 'Please fill in your name and email.');
+      return;
+    }
+
+    const subject = encodeURIComponent('GenGuardian Enquiry — ' + company);
+    const body = encodeURIComponent(
+      'Name: ' + name + '\nCompany: ' + company + '\nEmail: ' + email + '\nType: ' + role + '\n\n' + msg
+    );
+
+    window.location.href = 'mailto:miguel@genguardian.pt?subject=' + subject + '&body=' + body;
+
+    document.getElementById('contactForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  }
+</script>
+</body>
+</html>
