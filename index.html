@@ -666,6 +666,9 @@
 
     .contact-detail .cd-icon { font-size: 1rem; }
     .contact-detail .cd-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 0.1rem; }
+    .contact-detail .cd-label[data-lang] { display: none; }
+    .lang-en .contact-detail .cd-label[data-lang="en"] { display: block; }
+    .lang-pt .contact-detail .cd-label[data-lang="pt"] { display: block; }
     .contact-detail .cd-val { font-size: 0.88rem; }
 
     /* Form */
@@ -864,7 +867,7 @@
       <h1 data-lang="en">Your Generator<br><em>Starts.</em><br>Every Time.</h1>
       <h1 data-lang="pt">O Seu Gerador<br><em>Arranca.</em><br>Sempre.</h1>
       <p class="hero-sub" data-lang="en">Real-time SIM-based IoT monitoring for standby generators. Fully independent of building WiFi and power — works precisely when everything else fails.</p>
-      <p class="hero-sub" data-lang="pt">Monitorização IoT em tempo real via SIM para geradores de emergência. Totalmente independente da rede WiFi e energia do edifício — funciona exactamente quando tudo o resto falha.</p>
+      <p class="hero-sub" data-lang="pt">Monitorização IoT em tempo real via SIM para geradores de reserva. Totalmente independente da rede WiFi e energia do edifício — funciona exactamente quando tudo o resto falha.</p>
       <div class="hero-actions">
         <a href="#contact" class="btn-primary">
           <span data-lang="en">Book a Call →</span>
@@ -916,12 +919,12 @@
 <!-- BLACKOUT BANNER -->
 <div class="blackout-banner">
   <div class="blackout-label" data-lang="en">April 28, 2025 — Iberian Blackout</div>
-  <div class="blackout-label" data-lang="pt">28 de Abril de 2025 — Apagão Ibérico</div>
+  <div class="blackout-label" data-lang="pt">28 de abril de 2025 — Apagão Ibérico</div>
   <div class="blackout-inner">
     <div class="blackout-stat">
       <span class="num">58M</span>
       <span class="lbl" data-lang="en">People Affected</span>
-      <span class="lbl" data-lang="pt">Pessoas Afectadas</span>
+      <span class="lbl" data-lang="pt">Pessoas Afetadas</span>
     </div>
     <div class="blackout-divider"></div>
     <div class="blackout-stat">
@@ -1001,7 +1004,7 @@
           <h3 data-lang="en">Install the Device</h3>
           <h3 data-lang="pt">Instalar o Dispositivo</h3>
           <p data-lang="en">Our own state of the art IoT unit is wired to your generator. No WiFi. No internet connection required at the building level. Takes under an hour.</p>
-          <p data-lang="pt">Um compacto dispositivo IoT Teltonika FMC234 é ligado directamente ao painel de controlo do gerador. Sem WiFi. Sem necessidade de ligação à internet no edifício. Demora menos de uma hora.</p>
+          <p data-lang="pt">O nosso dispositivo IoT de última geração é ligado directamente ao seu gerador. Sem WiFi. Sem necessidade de ligação à internet no edifício. Demora menos de uma hora.</p>
           <span class="mono-detail">⚡ Weather Proof · 4G LTE · Internal Battery</span>
         </div>
       </div>
@@ -1011,7 +1014,7 @@
           <h3 data-lang="en">Monitor in Real Time</h3>
           <h3 data-lang="pt">Monitorização em Tempo Real</h3>
           <p data-lang="en">The device transmits generator status over its own cellular SIM — completely independent of building power and WiFi. Battery backup ensures it keeps transmitting even during a total power failure.</p>
-          <p data-lang="pt">O dispositivo transmite o estado do gerador através do seu próprio SIM celular — completamente independente da energia e WiFi do edifício. A bateria interna garante transmissão mesmo durante uma falha total de energia.</p>
+          <p data-lang="pt">O dispositivo transmite o estado do gerador através do seu próprio cartão SIM — completamente independente da energia e WiFi do edifício. A bateria interna garante transmissão mesmo durante uma falha total de energia.</p>
           <span class="mono-detail">📶 Cellular SIM · 130+ Countries · No Roaming</span>
         </div>
       </div>
@@ -1021,7 +1024,7 @@
           <h3 data-lang="en">Instant Fault Alerts</h3>
           <h3 data-lang="pt">Alertas Imediatos de Falha</h3>
           <p data-lang="en">The moment a fault is detected — generator won't start, low fuel, battery failure — your contracted service company receives an automatic SMS and voice alert. They're dispatched before you even know there's a problem.</p>
-          <p data-lang="pt">No momento em que uma falha é detectada — gerador não arranca, baixo combustível, falha de bateria — a empresa de serviço contratada recebe automaticamente um SMS e alerta de voz. A equipa é despachada antes de saber que há um problema.</p>
+          <p data-lang="pt">No momento em que uma falha é detetada — gerador não arranca, baixo combustível, falha de bateria — a empresa de serviço contratada recebe automaticamente um SMS e alerta de voz. A equipa é despachada antes de saber que há um problema.</p>
           <span class="mono-detail">📱 Automatic SMS</span>
         </div>
       </div>
@@ -1029,7 +1032,7 @@
   </div>
 </section>
 
-<!-- WHY GENGUARDIAN -->
+<!-- WHY GENGUARDIAN + COMPARISON -->
 <section class="why-bg" id="why">
   <div class="section-inner">
     <div class="section-tag" data-lang="en">Why GenGuardian</div>
@@ -1038,120 +1041,54 @@
     <h2 data-lang="pt">Construído com<br><em>Experiência Comprovada</em></h2>
     <p class="section-lead" data-lang="en">This isn't a new idea. It's a proven Canadian business model brought to Portugal — with 1,800 monitored units and a successful exit behind it.</p>
     <p class="section-lead" data-lang="pt">Isto não é uma nova ideia. É um modelo de negócio canadiano comprovado trazido para Portugal — com 1.800 unidades monitorizadas e uma saída bem-sucedida.</p>
-    <div class="why-grid">
-      <div class="why-card fade-up">
-        <div class="why-icon">📡</div>
-        <h3 data-lang="en">SIM-Independent</h3>
-        <h3 data-lang="pt">Independente de WiFi</h3>
-        <p data-lang="en">Runs on its own cellular SIM with internal battery. Works precisely when building power and WiFi are down.</p>
-        <p data-lang="pt">Funciona com SIM celular próprio e bateria interna. Opera exactamente quando a energia e o WiFi do edifício estão em baixo.</p>
-      </div>
-      <div class="why-card fade-up">
-        <div class="why-icon">🔌</div>
-        <h3 data-lang="en">Brand Agnostic</h3>
-        <h3 data-lang="pt">Agnóstico de Marca</h3>
-        <p data-lang="en">Works on any generator, any brand, any age. No infrastructure changes, no manufacturer lock-in.</p>
-        <p data-lang="pt">Funciona em qualquer gerador, de qualquer marca, de qualquer idade. Sem alterações na infraestrutura, sem dependência de fabricante.</p>
-      </div>
-      <div class="why-card fade-up">
-        <div class="why-icon">⚖️</div>
-        <h3 data-lang="en">Legal Mandate</h3>
-        <h3 data-lang="pt">Mandato Legal</h3>
-        <p data-lang="en">RT-SCIE (Portaria 1532/2008) creates a legally required market. We serve buildings that must comply.</p>
-        <p data-lang="pt">O RT-SCIE (Portaria 1532/2008) cria um mercado legalmente obrigatório. Servimos edifícios que devem cumprir.</p>
-      </div>
-      <div class="why-card fade-up">
-        <div class="why-icon">💶</div>
-        <h3 data-lang="en">Simple Pricing</h3>
-        <h3 data-lang="pt">Preços Simples</h3>
-        <p data-lang="en">€30/month per unit. No surprise fees. Hardware payback in under 5 months. Transparent recurring model.</p>
-        <p data-lang="pt">€30/mês por unidade. Sem taxas surpresa. Retorno do hardware em menos de 5 meses. Modelo recorrente transparente.</p>
-      </div>
-      <div class="why-card fade-up">
-        <div class="why-icon">🏙️</div>
-        <h3 data-lang="en">Lisbon-First</h3>
-        <h3 data-lang="pt">Foco em Lisboa</h3>
-        <p data-lang="en">Deep local presence, Portuguese business relationships, and on-the-ground installation capability from day one.</p>
-        <p data-lang="pt">Forte presença local, relações comerciais portuguesas e capacidade de instalação no terreno desde o primeiro dia.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- COMPARISON -->
-<section id="comparison">
-  <div class="section-inner">
-    <div class="section-tag" data-lang="en">Comparison</div>
-    <div class="section-tag" data-lang="pt">Comparação</div>
-    <h2 data-lang="en">Why Nothing<br><em>Else Works</em></h2>
-    <h2 data-lang="pt">Porque Nada<br><em>Mais Funciona</em></h2>
+    <h2 data-lang="en" style="margin-top:3rem">Why Nothing<br><em>Else Works</em></h2>
+    <h2 data-lang="pt" style="margin-top:3rem">Porque Nada<br><em>Mais Funciona</em></h2>
     <div style="overflow-x:auto">
       <table class="comp-table">
         <thead>
           <tr>
-            <th data-lang="en">Feature</th>
-            <th data-lang="pt">Funcionalidade</th>
+            <th><span data-lang="en">Feature</span><span data-lang="pt">Funcionalidade</span></th>
             <th class="highlight">GenGuardian</th>
-            <th data-lang="en">WiFi Monitoring</th>
-            <th data-lang="en">Manual Checks</th>
-            <th data-lang="pt">Monitorização WiFi</th>
-            <th data-lang="pt">Verificações Manuais</th>
+            <th><span data-lang="en">WiFi Monitoring</span><span data-lang="pt">Monitorização WiFi</span></th>
+            <th><span data-lang="en">Manual Checks</span><span data-lang="pt">Verificações Manuais</span></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td data-lang="en">Works during a blackout</td>
-            <td data-lang="pt">Funciona durante apagão</td>
+            <td><span data-lang="en">Works during a blackout</span><span data-lang="pt">Funciona durante apagão</span></td>
             <td><span class="check">✓</span></td>
-            <td data-lang="en"><span class="cross">✗</span></td>
-            <td data-lang="en"><span class="cross">✗</span></td>
-            <td data-lang="pt"><span class="cross">✗</span></td>
-            <td data-lang="pt"><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
           </tr>
           <tr>
-            <td data-lang="en">Real-time fault alerts</td>
-            <td data-lang="pt">Alertas de falha em tempo real</td>
+            <td><span data-lang="en">Real-time fault alerts</span><span data-lang="pt">Alertas de falha em tempo real</span></td>
             <td><span class="check">✓</span></td>
-            <td data-lang="en"><span class="partial">Partial</span></td>
-            <td data-lang="en"><span class="cross">✗</span></td>
-            <td data-lang="pt"><span class="partial">Parcial</span></td>
-            <td data-lang="pt"><span class="cross">✗</span></td>
+            <td><span data-lang="en" class="partial">Partial</span><span data-lang="pt" class="partial">Parcial</span></td>
+            <td><span class="cross">✗</span></td>
           </tr>
           <tr>
-            <td data-lang="en">Brand agnostic</td>
-            <td data-lang="pt">Agnóstico de marca</td>
+            <td><span data-lang="en">Brand agnostic</span><span data-lang="pt">Agnóstico de marca</span></td>
             <td><span class="check">✓</span></td>
-            <td data-lang="en"><span class="cross">✗</span></td>
-            <td data-lang="en"><span class="check">✓</span></td>
-            <td data-lang="pt"><span class="cross">✗</span></td>
-            <td data-lang="pt"><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
           </tr>
           <tr>
-            <td data-lang="en">No infrastructure changes</td>
-            <td data-lang="pt">Sem alterações na infraestrutura</td>
+            <td><span data-lang="en">No infrastructure changes</span><span data-lang="pt">Sem alterações na infraestrutura</span></td>
             <td><span class="check">✓</span></td>
-            <td data-lang="en"><span class="cross">✗</span></td>
-            <td data-lang="en"><span class="check">✓</span></td>
-            <td data-lang="pt"><span class="cross">✗</span></td>
-            <td data-lang="pt"><span class="check">✓</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
           </tr>
           <tr>
-            <td data-lang="en">Automatic service dispatch</td>
-            <td data-lang="pt">Despacho automático de serviço</td>
+            <td><span data-lang="en">Automatic service dispatch</span><span data-lang="pt">Despacho automático de serviço</span></td>
             <td><span class="check">✓</span></td>
-            <td data-lang="en"><span class="cross">✗</span></td>
-            <td data-lang="en"><span class="cross">✗</span></td>
-            <td data-lang="pt"><span class="cross">✗</span></td>
-            <td data-lang="pt"><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
           </tr>
           <tr>
-            <td data-lang="en">Predictable monthly cost</td>
-            <td data-lang="pt">Custo mensal previsível</td>
+            <td><span data-lang="en">Predictable monthly cost</span><span data-lang="pt">Custo mensal previsível</span></td>
             <td><span class="check">✓</span></td>
-            <td data-lang="en"><span class="partial">Varies</span></td>
-            <td data-lang="en"><span class="cross">✗</span></td>
-            <td data-lang="pt"><span class="partial">Variável</span></td>
-            <td data-lang="pt"><span class="cross">✗</span></td>
+            <td><span data-lang="en" class="partial">Varies</span><span data-lang="pt" class="partial">Variável</span></td>
+            <td><span class="cross">✗</span></td>
           </tr>
         </tbody>
       </table>
@@ -1159,53 +1096,7 @@
   </div>
 </section>
 
-<!-- PRICING -->
-<section id="pricing" style="background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
-  <div class="section-inner">
-    <div class="section-tag" data-lang="en">Pricing</div>
-    <div class="section-tag" data-lang="pt">Preços</div>
-    <h2 data-lang="en">Simple,<br><em>Transparent</em> Pricing</h2>
-    <h2 data-lang="pt">Preços Simples<br>e <em>Transparentes</em></h2>
-    <p class="section-lead" data-lang="en">One device. One monthly fee. No hidden costs.</p>
-    <p class="section-lead" data-lang="pt">Um dispositivo. Uma mensalidade. Sem custos ocultos.</p>
-    <div class="pricing-grid">
-      <div class="pricing-card">
-        <div class="section-tag" style="margin-bottom:0.5rem" data-lang="en">One-Time</div>
-        <div class="section-tag" style="margin-bottom:0.5rem" data-lang="pt">Único</div>
-        <div class="pricing-amount">€120<span data-lang="en">–€150</span><span data-lang="pt">–€150</span></div>
-        <div class="pricing-label" data-lang="en">Installation Fee</div>
-        <div class="pricing-label" data-lang="pt">Taxa de Instalação</div>
-        <ul class="pricing-features">
-          <li data-lang="en">Hardware supply & wiring</li>
-          <li data-lang="pt">Fornecimento e cablagem do hardware</li>
-          <li data-lang="en">SIM activation</li>
-          <li data-lang="pt">Activação do SIM</li>
-          <li data-lang="en">Dashboard onboarding</li>
-          <li data-lang="pt">Configuração no dashboard</li>
-          <li data-lang="en">Under 1hr on-site</li>
-          <li data-lang="pt">Menos de 1h no local</li>
-        </ul>
-      </div>
-      <div class="pricing-card featured" data-badge="Per Unit">
-        <div class="section-tag" style="margin-bottom:0.5rem" data-lang="en">Monthly</div>
-        <div class="section-tag" style="margin-bottom:0.5rem" data-lang="pt">Mensal</div>
-        <div class="pricing-amount">€30<span data-lang="en">/mo</span><span data-lang="pt">/mês</span></div>
-        <div class="pricing-label" data-lang="en">Per Monitored Unit</div>
-        <div class="pricing-label" data-lang="pt">Por Unidade Monitorizada</div>
-        <ul class="pricing-features">
-          <li data-lang="en">24/7 real-time monitoring</li>
-          <li data-lang="pt">Monitorização 24/7 em tempo real</li>
-          <li data-lang="en">Cellular SIM data included</li>
-          <li data-lang="pt">Dados SIM celular incluídos</li>
-          <li data-lang="en">Automatic SMS + voice alerts</li>
-          <li data-lang="pt">SMS automático + alertas de voz</li>
-          <li data-lang="en">Dashboard access</li>
-          <li data-lang="pt">Acesso ao dashboard</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- CONTACT -->
 <section id="contact">
@@ -1220,22 +1111,20 @@
         <h3 data-lang="pt">Agendar uma Reunião ou Enviar Mensagem</h3>
         <p data-lang="en">Whether you manage a hotel, hospital, commercial building, or you're a generator service company — we'd like to talk. No pressure, no sales deck. Just a 20-minute conversation.</p>
         <p data-lang="pt">Seja gestor de hotel, hospital, edifício comercial, ou empresa de serviços de geradores — queremos conversar. Sem pressão. Apenas uma conversa de 20 minutos.</p>
-        <a href="mailto:miguel@genguardian.pt" class="contact-detail">
-        <a href="https://a1generators.ca" target="_blank" class="contact-detail">
+        <div class="contact-detail">
           <span class="cd-icon">🌐</span>
           <div>
             <span class="cd-label" data-lang="en">VAT Number</span>
-            <span class="cd-label" data-lang="pt">VAT Número</span>
+            <span class="cd-label" data-lang="pt">NIF</span>
             <span class="cd-val">518072371</span>
           </div>
-        </a>
+        </div>
         <div class="contact-detail">
           <span class="cd-icon">📍</span>
           <div>
             <span class="cd-label" data-lang="en">Location</span>
             <span class="cd-label" data-lang="pt">Localização</span>
-            <span class="cd-val" data-lang="en">Lisboa, Portugal</span>
-            <span class="cd-val" data-lang="pt">Lisboa, Portugal</span>
+            <span class="cd-val">Lisboa, Portugal</span>
           </div>
         </div>
       </div>
@@ -1262,7 +1151,7 @@
             <label data-lang="pt">Sou um(a)...</label>
             <select id="frole">
               <option value="" data-lang="en">Select type...</option>
-              <option value="" data-lang="pt">Seleccionar tipo...</option>
+              <option value="" data-lang="pt">Selecionar tipo...</option>
               <option value="hotel" data-lang="en">Hotel / Hospitality</option>
               <option value="hotel" data-lang="pt">Hotel / Hospitalidade</option>
               <option value="hospital" data-lang="en">Hospital / Healthcare</option>
@@ -1303,8 +1192,8 @@
 <footer>
   <div class="footer-logo">GENGUARDIAN · PORTUGAL</div>
   <div class="footer-legal">
-    <span data-lang="en">© 2025 GenGuardian Portugal · RT-SCIE compliant solutions · Lisboa</span>
-    <span data-lang="pt">© 2025 GenGuardian Portugal · Soluções conformes RT-SCIE · Lisboa</span>
+    <span data-lang="en">© 2025 GenGuardian Portugal · Lisboa</span>
+    <span data-lang="pt">© 2025 GenGuardian Portugal · Lisboa</span>
   </div>
 </footer>
 
