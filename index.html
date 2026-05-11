@@ -13,8 +13,9 @@
       --bg2:       #111315;
       --bg3:       #181b1e;
       --border:    #2a2e33;
-      --amber:     #f5a623;
-      --amber-dim: #b87a1a;
+      --blue:      #3db4e8;
+      --blue-dim:  #1e6a95;
+      --blue-bright: #5ac8f5;
       --red:       #e03c3c;
       --green:     #2ecc71;
       --text:      #d6dde5;
@@ -38,7 +39,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ── NOISE OVERLAY ── */
+/* NOISE OVERLAY */
 body::before {
   content: '';
   position: fixed; inset: 0;
@@ -48,7 +49,7 @@ body::before {
   opacity: 0.35;
 }
 
-/* ── NAV ── */
+/* NAV */
 nav {
   position: fixed; top: 0; left: 0; right: 0;
   z-index: 100;
@@ -72,14 +73,14 @@ nav {
 
 .nav-logo .dot {
   width: 10px; height: 10px;
-  background: var(--amber);
+  background: var(--blue);
   border-radius: 50%;
   animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(245,166,35,0.7); }
-  50%       { box-shadow: 0 0 0 6px rgba(245,166,35,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(61,180,232,0.7); }
+  50%       { box-shadow: 0 0 0 6px rgba(61,180,232,0); }
 }
 
 .nav-right { display: flex; align-items: center; gap: 1.5rem; }
@@ -105,14 +106,14 @@ nav {
 }
 
 .lang-toggle button.active {
-  background: var(--amber);
+  background: var(--blue);
   color: #000;
   font-weight: 700;
 }
 
 .nav-cta {
   padding: 0.45rem 1.2rem;
-  background: var(--amber);
+  background: var(--blue);
   color: #000;
   font-family: var(--head);
   font-weight: 700;
@@ -124,9 +125,9 @@ nav {
   transition: background 0.2s;
 }
 
-.nav-cta:hover { background: #ffc04d; }
+.nav-cta:hover { background: var(--blue-bright); }
 
-/* ── HERO ── */
+/* HERO */
 .hero {
   min-height: 100vh;
   display: flex; align-items: center;
@@ -139,8 +140,8 @@ nav {
   content: '';
   position: absolute; inset: 0;
   background-image:
-    linear-gradient(rgba(245,166,35,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(245,166,35,0.04) 1px, transparent 1px);
+    linear-gradient(rgba(61,180,232,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61,180,232,0.04) 1px, transparent 1px);
   background-size: 60px 60px;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
 }
@@ -161,7 +162,7 @@ nav {
   font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.12em;
-  color: var(--amber);
+  color: var(--blue);
   text-transform: uppercase;
   margin-bottom: 1.5rem;
 }
@@ -170,7 +171,7 @@ nav {
   content: '';
   display: inline-block;
   width: 24px; height: 1px;
-  background: var(--amber);
+  background: var(--blue);
 }
 
 h1 {
@@ -184,7 +185,7 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
-h1 em { font-style: normal; color: var(--amber); }
+h1 em { font-style: normal; color: var(--blue); }
 
 .hero-sub {
   font-size: 1.05rem;
@@ -199,7 +200,7 @@ h1 em { font-style: normal; color: var(--amber); }
 
 .btn-primary {
   padding: 0.85rem 2rem;
-  background: var(--amber);
+  background: var(--blue);
   color: #000;
   font-family: var(--head);
   font-weight: 700;
@@ -213,7 +214,7 @@ h1 em { font-style: normal; color: var(--amber); }
   transition: all 0.2s;
 }
 
-.btn-primary:hover { background: #ffc04d; transform: translateY(-1px); }
+.btn-primary:hover { background: var(--blue-bright); transform: translateY(-1px); }
 
 .btn-secondary {
   padding: 0.85rem 2rem;
@@ -231,7 +232,7 @@ h1 em { font-style: normal; color: var(--amber); }
   transition: all 0.2s;
 }
 
-.btn-secondary:hover { border-color: var(--amber); color: var(--amber); }
+.btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
 
 /* Status panel */
 .status-panel {
@@ -287,7 +288,7 @@ h1 em { font-style: normal; color: var(--amber); }
 
 .status-val { font-weight: 500; color: var(--text); }
 .status-val.ok   { color: var(--green); }
-.status-val.warn { color: var(--amber); }
+.status-val.warn { color: var(--blue); }
 .status-val.bad  { color: var(--red); }
 
 .alert-banner {
@@ -305,7 +306,7 @@ h1 em { font-style: normal; color: var(--amber); }
 
 .alert-banner::before { content: '⚠'; font-size: 0.9rem; }
 
-/* ── BLACKOUT BANNER ── */
+/* BLACKOUT BANNER */
 .blackout-banner {
   background: rgba(224,60,60,0.06);
   border-top: 1px solid rgba(224,60,60,0.2);
@@ -351,7 +352,7 @@ h1 em { font-style: normal; color: var(--amber); }
   margin-bottom: 1rem;
 }
 
-/* ── SECTIONS ── */
+/* SECTIONS */
 section { padding: 6rem 2.5rem; }
 
 .section-inner { max-width: 1100px; margin: 0 auto; }
@@ -360,7 +361,7 @@ section { padding: 6rem 2.5rem; }
   font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.14em;
-  color: var(--amber);
+  color: var(--blue);
   text-transform: uppercase;
   margin-bottom: 1rem;
   display: flex; align-items: center; gap: 0.5rem;
@@ -378,7 +379,7 @@ h2 {
   margin-bottom: 1rem;
 }
 
-h2 em { font-style: normal; color: var(--amber); }
+h2 em { font-style: normal; color: var(--blue); }
 
 .section-lead {
   font-size: 1rem;
@@ -389,7 +390,7 @@ h2 em { font-style: normal; color: var(--amber); }
   line-height: 1.75;
 }
 
-/* ── PROBLEM CARDS ── */
+/* PROBLEM CARDS */
 .problem-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -405,7 +406,7 @@ h2 em { font-style: normal; color: var(--amber); }
   transition: border-color 0.3s;
 }
 
-.problem-card:hover { border-color: var(--amber-dim); }
+.problem-card:hover { border-color: var(--blue-dim); }
 
 .problem-card .icon { font-size: 1.8rem; margin-bottom: 1.2rem; display: block; }
 
@@ -432,9 +433,9 @@ h2 em { font-style: normal; color: var(--amber); }
 }
 
 .badge-red   { background: rgba(224,60,60,0.15); color: var(--red); border: 1px solid rgba(224,60,60,0.3); }
-.badge-amber { background: rgba(245,166,35,0.1);  color: var(--amber); border: 1px solid rgba(245,166,35,0.25); }
+.badge-blue  { background: rgba(61,180,232,0.1);  color: var(--blue); border: 1px solid rgba(61,180,232,0.25); }
 
-/* ── HOW IT WORKS ── */
+/* HOW IT WORKS */
 .steps { display: flex; flex-direction: column; gap: 0; }
 
 .step {
@@ -456,7 +457,7 @@ h2 em { font-style: normal; color: var(--amber); }
   line-height: 1;
 }
 
-.step:hover .step-num { color: var(--amber-dim); transition: color 0.3s; }
+.step:hover .step-num { color: var(--blue-dim); transition: color 0.3s; }
 
 .step-content h3 {
   font-family: var(--head);
@@ -475,12 +476,12 @@ h2 em { font-style: normal; color: var(--amber); }
   display: inline-flex; align-items: center; gap: 0.4rem;
   font-family: var(--mono);
   font-size: 0.72rem;
-  color: var(--amber);
+  color: var(--blue);
   letter-spacing: 0.06em;
   margin-top: 0.75rem;
 }
 
-/* ── WHY GENGUARDIAN ── */
+/* WHY GENGUARDIAN */
 .why-bg { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 
 .why-grid {
@@ -497,7 +498,7 @@ h2 em { font-style: normal; color: var(--amber); }
   transition: all 0.25s;
 }
 
-.why-card:hover { border-color: var(--amber); transform: translateY(-2px); }
+.why-card:hover { border-color: var(--blue); transform: translateY(-2px); }
 
 .why-card .why-icon { font-size: 1.4rem; margin-bottom: 1rem; }
 
@@ -513,7 +514,7 @@ h2 em { font-style: normal; color: var(--amber); }
 
 .why-card p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
 
-/* ── COMPARISON TABLE ── */
+/* COMPARISON TABLE */
 .comp-table {
   width: 100%;
   border-collapse: collapse;
@@ -533,7 +534,7 @@ h2 em { font-style: normal; color: var(--amber); }
   color: var(--muted);
 }
 
-.comp-table th.highlight { color: var(--amber); border-bottom-color: var(--amber); }
+.comp-table th.highlight { color: var(--blue); border-bottom-color: var(--blue); }
 
 .comp-table td {
   padding: 1rem 1.5rem;
@@ -547,9 +548,9 @@ h2 em { font-style: normal; color: var(--amber); }
 
 .check { color: var(--green); font-size: 1.1rem; }
 .cross { color: var(--red); font-size: 1.1rem; }
-.partial { color: var(--amber); font-size: 0.8rem; }
+.partial { color: var(--blue); font-size: 0.8rem; }
 
-/* ── CONTACT ── */
+/* CONTACT */
 .contact-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -582,7 +583,7 @@ h2 em { font-style: normal; color: var(--amber); }
   transition: border-color 0.2s;
 }
 
-.contact-detail:hover { border-color: var(--amber); }
+.contact-detail:hover { border-color: var(--blue); }
 
 .contact-detail .cd-icon { font-size: 1rem; }
 .contact-detail .cd-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 0.1rem; }
@@ -621,7 +622,7 @@ h2 em { font-style: normal; color: var(--amber); }
 
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus { border-color: var(--amber); }
+.form-group textarea:focus { border-color: var(--blue); }
 
 .form-group textarea { resize: vertical; min-height: 100px; }
 .form-group select option { background: var(--bg2); }
@@ -630,7 +631,7 @@ h2 em { font-style: normal; color: var(--amber); }
 
 .submit-btn {
   padding: 0.9rem 2rem;
-  background: var(--amber);
+  background: var(--blue);
   color: #000;
   font-family: var(--head);
   font-weight: 700;
@@ -644,7 +645,7 @@ h2 em { font-style: normal; color: var(--amber); }
   margin-top: 0.5rem;
 }
 
-.submit-btn:hover { background: #ffc04d; }
+.submit-btn:hover { background: var(--blue-bright); }
 .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .form-note {
@@ -664,7 +665,6 @@ h2 em { font-style: normal; color: var(--amber); }
   margin-top: 0.25rem;
 }
 
-/* Success state */
 .form-success {
   display: none;
   text-align: center;
@@ -687,7 +687,7 @@ h2 em { font-style: normal; color: var(--amber); }
 
 .form-success p { font-size: 0.88rem; color: var(--muted); }
 
-/* ── FOOTER ── */
+/* FOOTER */
 footer {
   background: var(--bg3);
   border-top: 1px solid var(--border);
@@ -721,7 +721,7 @@ footer {
   letter-spacing: 0.06em;
 }
 
-/* ── ANIMATIONS ── */
+/* ANIMATIONS */
 .fade-up {
   opacity: 0;
   transform: translateY(24px);
@@ -730,7 +730,7 @@ footer {
 
 .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-/* ── RESPONSIVE ── */
+/* RESPONSIVE */
 @media (max-width: 900px) {
   .hero-inner { grid-template-columns: 1fr; }
   .status-panel { display: none; }
@@ -749,7 +749,7 @@ footer {
   .form-row { grid-template-columns: 1fr; }
 }
 
-/* ── HIDDEN LANG ── */
+/* LANGUAGE SYSTEM */
 [data-lang] { display: none; }
 .lang-en [data-lang="en"] { display: block; }
 .lang-pt [data-lang="pt"] { display: block; }
@@ -766,7 +766,7 @@ li[data-lang] { display: none; }
 
   </style>
 </head>
-<body class="lang-en">
+<body class="lang-pt">
 
 <!-- NAV -->
 
@@ -777,8 +777,8 @@ li[data-lang] { display: none; }
   </a>
   <div class="nav-right">
     <div class="lang-toggle">
-      <button class="active" onclick="setLang('en')">EN</button>
-      <button onclick="setLang('pt')">PT</button>
+      <button onclick="setLang('en')">EN</button>
+      <button class="active" onclick="setLang('pt')">PT</button>
     </div>
     <a href="#contact" class="nav-cta">
       <span data-lang="en">Book a Call</span>
@@ -811,7 +811,7 @@ li[data-lang] { display: none; }
         </a>
       </div>
     </div>
-    <div class="status-panel fade-up" style="animation-delay:0.2s">
+    <div class="status-panel">
       <div class="status-panel-header">
         <span>UNIT-0042 · HOTEL LISBOA</span>
         <span class="status-live">LIVE</span>
@@ -894,8 +894,8 @@ li[data-lang] { display: none; }
         <p data-lang="pt">O Artigo 72º, Portaria 1532/2008 (RT-SCIE) exige alimentação de emergência em hotéis, hospitais e edifícios comerciais. O incumprimento é uma responsabilidade legal.</p>
       </div>
       <div class="problem-card fade-up">
-        <span class="badge badge-amber" data-lang="en">Hidden Risk</span>
-        <span class="badge badge-amber" data-lang="pt">Risco Oculto</span>
+        <span class="badge badge-blue" data-lang="en">Hidden Risk</span>
+        <span class="badge badge-blue" data-lang="pt">Risco Oculto</span>
         <span class="icon">🔇</span>
         <h3 data-lang="en">Silent Generator Failure</h3>
         <h3 data-lang="pt">Falha Silenciosa</h3>
@@ -953,7 +953,7 @@ li[data-lang] { display: none; }
           <h3 data-lang="pt">Alertas Imediatos de Falha</h3>
           <p data-lang="en">The moment a fault is detected — generator won't start, low fuel, battery failure — your manager receives an automatic SMS alert. By the time anyone on-site notices something's wrong, the call to fix it is already made.</p>
           <p data-lang="pt">O momento em que uma falha é detetada — o gerador não arranca, combustível baixo, falha na bateria — o seu gestor recebe automaticamente um SMS. Quando alguém no local se apercebe que há um problema, a ordem para o resolver já foi dada.</p>
-          <span class="mono-detail">📱 Automatic SMS</span>
+          <span class="mono-detail">📱 Automatic SMS · Voice Alerts · 24/7</span>
         </div>
       </div>
     </div>
@@ -968,52 +968,86 @@ li[data-lang] { display: none; }
     <div class="section-tag" data-lang="pt">Porquê GenGuardian</div>
     <h2 data-lang="en">Built on <em>Proven</em><br>Experience</h2>
     <h2 data-lang="pt">Construído com<br><em>Experiência Comprovada</em></h2>
-    <p class="section-lead" data-lang="en">This isn't a new idea. It's a proven Canadian business model brought to Portugal — with 1,800 monitored units and a successful exit behind it.</p>
-    <p class="section-lead" data-lang="pt">Isto não é uma nova ideia. É um modelo de negócio canadiano comprovado trazido para Portugal — com 1.800 unidades monitorizadas e uma saída bem-sucedida.</p>
-    <h2 data-lang="en" style="margin-top:3rem">Why Nothing<br><em>Else Works</em></h2>
-    <h2 data-lang="pt" style="margin-top:3rem">Porque Nada<br><em>Mais Funciona</em></h2>
-    <div style="overflow-x:auto">
-      <table class="comp-table">
-        <thead>
-          <tr>
-            <th><span data-lang="en">Feature</span><span data-lang="pt">Funcionalidade</span></th>
-            <th class="highlight">GenGuardian</th>
-            <th><span data-lang="en">WiFi Monitoring</span><span data-lang="pt">Monitorização WiFi</span></th>
-            <th><span data-lang="en">Manual Checks</span><span data-lang="pt">Verificações Manuais</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span data-lang="en">Works during a blackout</span><span data-lang="pt">Funciona durante apagão</span></td>
-            <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td>
-          </tr>
-          <tr>
-            <td><span data-lang="en">Real-time fault alerts</span><span data-lang="pt">Alertas de falha em tempo real</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span data-lang="en" class="partial">Partial</span><span data-lang="pt" class="partial">Parcial</span></td>
-            <td><span class="cross">✗</span></td>
-          </tr>
-          <tr>
-            <td><span data-lang="en">Brand agnostic</span><span data-lang="pt">Agnóstico de marca</span></td>
-            <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td>
-          </tr>
-          <tr>
-            <td><span data-lang="en">No infrastructure changes</span><span data-lang="pt">Sem alterações na infraestrutura</span></td>
-            <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td>
-          </tr>
-          <tr>
-            <td><span data-lang="en">Automatic service dispatch</span><span data-lang="pt">Despacho automático de serviço</span></td>
-            <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td>
-          </tr>
-          <tr>
-            <td><span data-lang="en">Predictable monthly cost</span><span data-lang="pt">Custo mensal previsível</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span data-lang="en" class="partial">Varies</span><span data-lang="pt" class="partial">Variável</span></td>
-            <td><span class="cross">✗</span></td>
-          </tr>
-        </tbody>
-      </table>
+    <p class="section-lead" data-lang="en">Purpose-built for the Portuguese market. Every feature exists because a generator that fails silently is worse than no generator at all.</p>
+    <p class="section-lead" data-lang="pt">Desenvolvido para o mercado português. Cada funcionalidade existe porque um gerador que falha em silêncio é pior do que não ter gerador de todo.</p>
+    <div class="why-grid">
+      <div class="why-card fade-up">
+        <div class="why-icon">🔋</div>
+        <h3 data-lang="en">Internal Battery</h3>
+        <h3 data-lang="pt">Bateria Interna</h3>
+        <p data-lang="en">Stays online even if the generator fails to start. 1,000mAh — keeps transmitting through a total power loss.</p>
+        <p data-lang="pt">Mantém-se online mesmo que o gerador não arranque. 1.000mAh — continua a transmitir durante uma falha total de energia.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon">📡</div>
+        <h3 data-lang="en">Own SIM · No WiFi</h3>
+        <h3 data-lang="pt">SIM Próprio · Sem WiFi</h3>
+        <p data-lang="en">4G LTE with Teltonika SIM. 130+ countries, no roaming fees. Zero dependency on building infrastructure.</p>
+        <p data-lang="pt">4G LTE com SIM Teltonika. 130+ países, sem custos de roaming. Zero dependência da infraestrutura do edifício.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon">🔧</div>
+        <h3 data-lang="en">Any Generator</h3>
+        <h3 data-lang="pt">Qualquer Gerador</h3>
+        <p data-lang="en">Brand-agnostic. Generac, Kohler, Cummins — or no-name. Any age. No infrastructure changes required.</p>
+        <p data-lang="pt">Agnóstico de marca. Generac, Kohler, Cummins — ou qualquer outra. Qualquer idade. Sem alterações necessárias.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon">📋</div>
+        <h3 data-lang="en">RT-SCIE Compliance</h3>
+        <h3 data-lang="pt">Conformidade RT-SCIE</h3>
+        <p data-lang="en">Continuous monitoring and event logging to demonstrate compliance with Artigo 72º, Portaria 1532/2008. Your liability, covered.</p>
+        <p data-lang="pt">Monitorização contínua e registo de eventos para demonstrar conformidade com o Artigo 72º, Portaria 1532/2008. A sua responsabilidade, coberta.</p>
+      </div>
     </div>
+
+```
+<h2 data-lang="en" style="margin-top:3rem">Why Nothing<br><em>Else Works</em></h2>
+<h2 data-lang="pt" style="margin-top:3rem">Porque Nada<br><em>Mais Funciona</em></h2>
+<div style="overflow-x:auto">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th><span data-lang="en">Feature</span><span data-lang="pt">Funcionalidade</span></th>
+        <th class="highlight">GenGuardian</th>
+        <th><span data-lang="en">WiFi Monitoring</span><span data-lang="pt">Monitorização WiFi</span></th>
+        <th><span data-lang="en">Manual Checks</span><span data-lang="pt">Verificações Manuais</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span data-lang="en">Works during a blackout</span><span data-lang="pt">Funciona durante apagão</span></td>
+        <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td><span data-lang="en">Real-time fault alerts</span><span data-lang="pt">Alertas de falha em tempo real</span></td>
+        <td><span class="check">✓</span></td>
+        <td><span data-lang="en" class="partial">Partial</span><span data-lang="pt" class="partial">Parcial</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td><span data-lang="en">Brand agnostic</span><span data-lang="pt">Agnóstico de marca</span></td>
+        <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td>
+      </tr>
+      <tr>
+        <td><span data-lang="en">No infrastructure changes</span><span data-lang="pt">Sem alterações na infraestrutura</span></td>
+        <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td>
+      </tr>
+      <tr>
+        <td><span data-lang="en">Automatic service dispatch</span><span data-lang="pt">Despacho automático de serviço</span></td>
+        <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td><span data-lang="en">Predictable monthly cost</span><span data-lang="pt">Custo mensal previsível</span></td>
+        <td><span class="check">✓</span></td>
+        <td><span data-lang="en" class="partial">Varies</span><span data-lang="pt" class="partial">Variável</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
   </div>
 </section>
 
@@ -1032,6 +1066,14 @@ li[data-lang] { display: none; }
         <p data-lang="en">Whether you manage a hotel, hospital, commercial building, or you're a generator service company — we'd like to talk. No pressure, no sales deck. Just a 20-minute conversation.</p>
         <p data-lang="pt">Seja gestor de hotel, hospital, edifício comercial, ou empresa de serviços de geradores — queremos conversar. Sem pressão. Apenas uma conversa de 20 minutos.</p>
         <div class="contact-detail">
+          <span class="cd-icon">✉️</span>
+          <div>
+            <span class="cd-label" data-lang="en">Email</span>
+            <span class="cd-label" data-lang="pt">Email</span>
+            <span class="cd-val">miguel@genguardian.pt</span>
+          </div>
+        </div>
+        <div class="contact-detail">
           <span class="cd-icon">🌐</span>
           <div>
             <span class="cd-label" data-lang="en">VAT Number</span>
@@ -1049,7 +1091,6 @@ li[data-lang] { display: none; }
         </div>
       </div>
       <div class="fade-up">
-        <!-- FORM — posts to Formspree -->
         <form
           id="contactForm"
           class="contact-form"
@@ -1090,21 +1131,21 @@ li[data-lang] { display: none; }
             <label data-lang="pt">Mensagem (opcional)</label>
             <textarea name="message" placeholder="..."></textarea>
           </div>
-          <!-- Hidden field so you know which language the user was in -->
-          <input type="hidden" name="_language" id="formLang" value="en" />
-          <!-- Redirect back to the page after submit (Formspree fallback for non-JS) -->
+          <input type="hidden" name="_language" id="formLang" value="pt" />
           <input type="hidden" name="_next" value="https://genguardian.pt/#contact" />
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span data-lang="en">Send Message →</span>
+            <span data-lang="pt">Enviar Mensagem →</span>
+          </button>
+          <p class="form-error" id="formError">
+            <span data-lang="en">Something went wrong. Please try again or email miguel@genguardian.pt</span>
+            <span data-lang="pt">Algo correu mal. Tente novamente ou envie email para miguel@genguardian.pt</span>
+          </p>
+          <p class="form-note" data-lang="en">We'll respond within 1 business day.</p>
+          <p class="form-note" data-lang="pt">Respondemos em 1 dia útil.</p>
+        </form>
 
 ```
-      <button type="submit" class="submit-btn" id="submitBtn">
-        <span data-lang="en">Send Message →</span>
-        <span data-lang="pt">Enviar Mensagem →</span>
-      </button>
-      <p class="form-error" id="formError">Something went wrong. Please try again or email miguel@genguardian.pt</p>
-      <p class="form-note" data-lang="en">We'll respond within 1 business day.</p>
-      <p class="form-note" data-lang="pt">Respondemos em 1 dia útil.</p>
-    </form>
-
     <div class="form-success" id="formSuccess">
       <div class="success-icon">✓</div>
       <h3 data-lang="en">Message Sent</h3>
@@ -1123,14 +1164,14 @@ li[data-lang] { display: none; }
 
 <footer>
   <div class="footer-logo">GENGUARDIAN · PORTUGAL</div>
+  <div class="footer-meta">AG — Azores Generators · NIF 518072371</div>
   <div class="footer-legal">
-    <span data-lang="en">© 2025 GenGuardian Portugal · Lisboa</span>
-    <span data-lang="pt">© 2025 GenGuardian Portugal · Lisboa</span>
+    <span data-lang="en">© 2026 GenGuardian Portugal · Lisboa</span>
+    <span data-lang="pt">© 2026 GenGuardian Portugal · Lisboa</span>
   </div>
 </footer>
 
 <script>
-  // Language toggle
   function setLang(lang) {
     document.body.className = 'lang-' + lang;
     document.getElementById('formLang').value = lang;
@@ -1139,13 +1180,11 @@ li[data-lang] { display: none; }
     });
   }
 
-  // Intersection Observer for fade-up
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-  // Formspree AJAX submit — keeps user on page, shows success state
   const form = document.getElementById('contactForm');
   const submitBtn = document.getElementById('submitBtn');
   const formError = document.getElementById('formError');
@@ -1154,16 +1193,13 @@ li[data-lang] { display: none; }
     e.preventDefault();
     submitBtn.disabled = true;
     formError.style.display = 'none';
-
     const data = new FormData(form);
-
     try {
       const res = await fetch('https://formspree.io/f/mdayepay', {
         method: 'POST',
         body: data,
         headers: { 'Accept': 'application/json' }
       });
-
       if (res.ok) {
         form.style.display = 'none';
         document.getElementById('formSuccess').style.display = 'block';
