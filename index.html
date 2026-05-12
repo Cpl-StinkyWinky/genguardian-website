@@ -127,6 +127,23 @@ nav {
 
 .nav-cta:hover { background: var(--blue-bright); }
 
+.nav-login {
+  padding: 0.45rem 1.2rem;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--head);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.nav-login:hover { border-color: var(--blue); color: var(--blue); }
+
 /* HERO */
 .hero {
   min-height: 100vh;
@@ -780,6 +797,10 @@ li[data-lang] { display: none; }
       <button onclick="setLang('en')">EN</button>
       <button class="active" onclick="setLang('pt')">PT</button>
     </div>
+    <a href="https://hosting.genguardian.pt" target="_blank" class="nav-login">
+      <span data-lang="en">Login</span>
+      <span data-lang="pt">Entrar</span>
+    </a>
     <a href="#contact" class="nav-cta">
       <span data-lang="en">Book a Call</span>
       <span data-lang="pt">Agendar Reunião</span>
