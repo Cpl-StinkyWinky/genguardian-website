@@ -1,1239 +1,858 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GenGuardian Portugal — Generator Monitoring</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GenGuardian — Generator Monitoring</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --bg:        #0a0b0c;
-      --bg2:       #111315;
-      --bg3:       #181b1e;
-      --border:    #2a2e33;
-      --blue:      #3db4e8;
-      --blue-dim:  #1e6a95;
-      --blue-bright: #5ac8f5;
-      --red:       #e03c3c;
-      --green:     #2ecc71;
-      --text:      #d6dde5;
-      --muted:     #6b7580;
-      --mono:      'Share Tech Mono', monospace;
-      --head:      'Barlow Condensed', sans-serif;
-      --body:      'Barlow', sans-serif;
+      --black:   #0a0a0a;
+      --black2:  #111111;
+      --black3:  #171717;
+      --white:   #f0ede8;
+      --dim:     #6b6b6b;
+      --accent:  #3ab4f2;
+      --red:     #c0392b;
+      --border:  rgba(240,237,232,0.08);
     }
 
-```
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--body);
-  font-weight: 400;
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* NOISE OVERLAY */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.35;
-}
-
-/* NAV */
-nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 2.5rem;
-  height: 64px;
-  background: rgba(10,11,12,0.88);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-
-.nav-logo {
-  font-family: var(--head);
-  font-weight: 800;
-  font-size: 1.35rem;
-  letter-spacing: 0.06em;
-  color: #fff;
-  text-decoration: none;
-  display: flex; align-items: center; gap: 0.6rem;
-}
-
-.nav-logo .dot {
-  width: 10px; height: 10px;
-  background: var(--blue);
-  border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(61,180,232,0.7); }
-  50%       { box-shadow: 0 0 0 6px rgba(61,180,232,0); }
-}
-
-.nav-right { display: flex; align-items: center; gap: 1.5rem; }
-
-.lang-toggle {
-  display: flex;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.lang-toggle button {
-  padding: 0.3rem 0.75rem;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  background: none;
-  border: none;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.lang-toggle button.active {
-  background: var(--blue);
-  color: #000;
-  font-weight: 700;
-}
-
-.nav-cta {
-  padding: 0.45rem 1.2rem;
-  background: var(--blue);
-  color: #000;
-  font-family: var(--head);
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-radius: 3px;
-  transition: background 0.2s;
-}
-
-.nav-cta:hover { background: var(--blue-bright); }
-
-.nav-login {
-  padding: 0.45rem 1.2rem;
-  background: transparent;
-  color: var(--muted);
-  font-family: var(--head);
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-radius: 3px;
-  border: 1px solid var(--border);
-  transition: border-color 0.2s, color 0.2s;
-}
-
-.nav-login:hover { border-color: var(--blue); color: var(--blue); }
-
-/* HERO */
-.hero {
-  min-height: 100vh;
-  display: flex; align-items: center;
-  padding: 64px 2.5rem 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::after {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(61,180,232,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(61,180,232,0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 80%);
-}
-
-.hero-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 4rem;
-  align-items: center;
-  position: relative; z-index: 1;
-}
-
-.hero-tag {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  color: var(--blue);
-  text-transform: uppercase;
-  margin-bottom: 1.5rem;
-}
-
-.hero-tag::before {
-  content: '';
-  display: inline-block;
-  width: 24px; height: 1px;
-  background: var(--blue);
-}
-
-h1 {
-  font-family: var(--head);
-  font-weight: 800;
-  font-size: clamp(3rem, 6vw, 5.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.01em;
-  color: #fff;
-  text-transform: uppercase;
-  margin-bottom: 1.5rem;
-}
-
-h1 em { font-style: normal; color: var(--blue); }
-
-.hero-sub {
-  font-size: 1.05rem;
-  color: var(--muted);
-  max-width: 520px;
-  margin-bottom: 2.5rem;
-  font-weight: 300;
-  line-height: 1.7;
-}
-
-.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-
-.btn-primary {
-  padding: 0.85rem 2rem;
-  background: var(--blue);
-  color: #000;
-  font-family: var(--head);
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border: none; border-radius: 3px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  transition: all 0.2s;
-}
-
-.btn-primary:hover { background: var(--blue-bright); transform: translateY(-1px); }
-
-.btn-secondary {
-  padding: 0.85rem 2rem;
-  background: transparent;
-  color: var(--text);
-  font-family: var(--head);
-  font-weight: 600;
-  font-size: 1rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-
-.btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
-
-/* Status panel */
-.status-panel {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.status-panel-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0.75rem 1.2rem;
-  background: var(--bg3);
-  border-bottom: 1px solid var(--border);
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-  text-transform: uppercase;
-}
-
-.status-live {
-  display: flex; align-items: center; gap: 0.4rem;
-  color: var(--green);
-  font-size: 0.68rem;
-}
-
-.status-live::before {
-  content: '';
-  width: 6px; height: 6px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: pulse-green 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse-green {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
-}
-
-.status-rows { padding: 1rem 1.2rem; display: flex; flex-direction: column; gap: 0.75rem; }
-
-.status-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.82rem;
-}
-
-.status-row:last-child { border-bottom: none; padding-bottom: 0; }
-
-.status-label { color: var(--muted); font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; }
-
-.status-val { font-weight: 500; color: var(--text); }
-.status-val.ok   { color: var(--green); }
-.status-val.warn { color: var(--blue); }
-.status-val.bad  { color: var(--red); }
-
-.alert-banner {
-  margin: 0 1.2rem 1.2rem;
-  padding: 0.75rem 1rem;
-  background: rgba(224,60,60,0.1);
-  border: 1px solid rgba(224,60,60,0.3);
-  border-radius: 4px;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  color: var(--red);
-  letter-spacing: 0.04em;
-  display: flex; align-items: center; gap: 0.5rem;
-}
-
-.alert-banner::before { content: '⚠'; font-size: 0.9rem; }
-
-/* BLACKOUT BANNER */
-.blackout-banner {
-  background: rgba(224,60,60,0.06);
-  border-top: 1px solid rgba(224,60,60,0.2);
-  border-bottom: 1px solid rgba(224,60,60,0.2);
-  padding: 1.5rem 2.5rem;
-  text-align: center;
-}
-
-.blackout-inner {
-  max-width: 900px; margin: 0 auto;
-  display: flex; align-items: center; justify-content: center;
-  gap: 3rem; flex-wrap: wrap;
-}
-
-.blackout-stat { text-align: center; }
-
-.blackout-stat .num {
-  font-family: var(--head);
-  font-weight: 800;
-  font-size: 2.4rem;
-  color: var(--red);
-  line-height: 1;
-  display: block;
-}
-
-.blackout-stat .lbl {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-top: 0.3rem;
-}
-
-.blackout-divider { width: 1px; height: 40px; background: var(--border); }
-
-.blackout-label {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  color: rgba(224,60,60,0.7);
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
-/* SECTIONS */
-section { padding: 6rem 2.5rem; }
-
-.section-inner { max-width: 1100px; margin: 0 auto; }
-
-.section-tag {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  color: var(--blue);
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-  display: flex; align-items: center; gap: 0.5rem;
-}
-
-.section-tag::before { content: '//'; opacity: 0.5; }
-
-h2 {
-  font-family: var(--head);
-  font-weight: 800;
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  text-transform: uppercase;
-  color: #fff;
-  line-height: 1;
-  margin-bottom: 1rem;
-}
-
-h2 em { font-style: normal; color: var(--blue); }
-
-.section-lead {
-  font-size: 1rem;
-  color: var(--muted);
-  max-width: 560px;
-  margin-bottom: 3.5rem;
-  font-weight: 300;
-  line-height: 1.75;
-}
-
-/* PROBLEM CARDS */
-.problem-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-.problem-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 2rem;
-  position: relative;
-  transition: border-color 0.3s;
-}
-
-.problem-card:hover { border-color: var(--blue-dim); }
-
-.problem-card .icon { font-size: 1.8rem; margin-bottom: 1.2rem; display: block; }
-
-.problem-card h3 {
-  font-family: var(--head);
-  font-weight: 700;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #fff;
-  margin-bottom: 0.6rem;
-}
-
-.problem-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
-
-.problem-card .badge {
-  position: absolute; top: 1rem; right: 1rem;
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  padding: 0.25rem 0.5rem;
-  border-radius: 3px;
-  text-transform: uppercase;
-}
-
-.badge-red   { background: rgba(224,60,60,0.15); color: var(--red); border: 1px solid rgba(224,60,60,0.3); }
-.badge-blue  { background: rgba(61,180,232,0.1);  color: var(--blue); border: 1px solid rgba(61,180,232,0.25); }
-
-/* HOW IT WORKS */
-.steps { display: flex; flex-direction: column; gap: 0; }
-
-.step {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 2rem;
-  padding: 2.5rem 0;
-  border-bottom: 1px solid var(--border);
-  align-items: start;
-}
-
-.step:last-child { border-bottom: none; }
-
-.step-num {
-  font-family: var(--head);
-  font-weight: 800;
-  font-size: 3.5rem;
-  color: var(--border);
-  line-height: 1;
-}
-
-.step:hover .step-num { color: var(--blue-dim); transition: color 0.3s; }
-
-.step-content h3 {
-  font-family: var(--head);
-  font-weight: 700;
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #fff;
-  margin-bottom: 0.5rem;
-  margin-top: 0.6rem;
-}
-
-.step-content p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-width: 520px; }
-
-.step-content .mono-detail {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  color: var(--blue);
-  letter-spacing: 0.06em;
-  margin-top: 0.75rem;
-}
-
-/* WHY GENGUARDIAN */
-.why-bg { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
-.why-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
-}
-
-.why-card {
-  padding: 1.75rem;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  transition: all 0.25s;
-}
-
-.why-card:hover { border-color: var(--blue); transform: translateY(-2px); }
-
-.why-card .why-icon { font-size: 1.4rem; margin-bottom: 1rem; }
-
-.why-card h3 {
-  font-family: var(--head);
-  font-weight: 700;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #fff;
-  margin-bottom: 0.5rem;
-}
-
-.why-card p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
-
-/* COMPARISON TABLE */
-.comp-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.88rem;
-  margin-top: 2rem;
-}
-
-.comp-table th {
-  font-family: var(--head);
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 1rem 1.5rem;
-  text-align: left;
-  border-bottom: 2px solid var(--border);
-  color: var(--muted);
-}
-
-.comp-table th.highlight { color: var(--blue); border-bottom-color: var(--blue); }
-
-.comp-table td {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-}
-
-.comp-table tr:last-child td { border-bottom: none; }
-.comp-table tr:hover td { background: rgba(255,255,255,0.02); }
-.comp-table td:first-child { font-weight: 500; color: var(--text); }
-
-.check { color: var(--green); font-size: 1.1rem; }
-.cross { color: var(--red); font-size: 1.1rem; }
-.partial { color: var(--blue); font-size: 0.8rem; }
-
-/* CONTACT */
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: start;
-}
-
-.contact-info h3 {
-  font-family: var(--head);
-  font-weight: 700;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #fff;
-  margin-bottom: 0.5rem;
-}
-
-.contact-info p { font-size: 0.88rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.65; }
-
-.contact-detail {
-  display: flex; align-items: center; gap: 0.75rem;
-  padding: 1rem 1.2rem;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  margin-bottom: 0.75rem;
-  font-size: 0.88rem;
-  text-decoration: none;
-  color: var(--text);
-  transition: border-color 0.2s;
-}
-
-.contact-detail:hover { border-color: var(--blue); }
-
-.contact-detail .cd-icon { font-size: 1rem; }
-.contact-detail .cd-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 0.1rem; }
-.contact-detail .cd-label[data-lang] { display: none; }
-.lang-en .contact-detail .cd-label[data-lang="en"] { display: block; }
-.lang-pt .contact-detail .cd-label[data-lang="pt"] { display: block; }
-.contact-detail .cd-val { font-size: 0.88rem; }
-
-/* Form */
-.contact-form { display: flex; flex-direction: column; gap: 1rem; }
-
-.form-group { display: flex; flex-direction: column; gap: 0.35rem; }
-
-.form-group label {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-  text-transform: uppercase;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 0.75rem 1rem;
-  color: var(--text);
-  font-family: var(--body);
-  font-size: 0.9rem;
-  outline: none;
-  transition: border-color 0.2s;
-  width: 100%;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus { border-color: var(--blue); }
-
-.form-group textarea { resize: vertical; min-height: 100px; }
-.form-group select option { background: var(--bg2); }
-
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-.submit-btn {
-  padding: 0.9rem 2rem;
-  background: var(--blue);
-  color: #000;
-  font-family: var(--head);
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 0.5rem;
-}
-
-.submit-btn:hover { background: var(--blue-bright); }
-.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.form-note {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  color: var(--muted);
-  letter-spacing: 0.04em;
-  margin-top: 0.25rem;
-}
-
-.form-error {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--red);
-  letter-spacing: 0.04em;
-  display: none;
-  margin-top: 0.25rem;
-}
-
-.form-success {
-  display: none;
-  text-align: center;
-  padding: 3rem 2rem;
-  background: var(--bg2);
-  border: 1px solid var(--green);
-  border-radius: 6px;
-}
-
-.form-success .success-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-
-.form-success h3 {
-  font-family: var(--head);
-  font-weight: 700;
-  font-size: 1.5rem;
-  text-transform: uppercase;
-  color: var(--green);
-  margin-bottom: 0.5rem;
-}
-
-.form-success p { font-size: 0.88rem; color: var(--muted); }
-
-/* FOOTER */
-footer {
-  background: var(--bg3);
-  border-top: 1px solid var(--border);
-  padding: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.footer-logo {
-  font-family: var(--head);
-  font-weight: 800;
-  font-size: 1.1rem;
-  letter-spacing: 0.06em;
-  color: #fff;
-}
-
-.footer-meta {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-}
-
-.footer-legal {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: var(--muted);
-  letter-spacing: 0.06em;
-}
-
-/* ANIMATIONS */
-.fade-up {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.fade-up.visible { opacity: 1; transform: translateY(0); }
-
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .hero-inner { grid-template-columns: 1fr; }
-  .status-panel { display: none; }
-  .contact-grid { grid-template-columns: 1fr; }
-  .comp-table { font-size: 0.78rem; }
-  .comp-table th, .comp-table td { padding: 0.75rem; }
-}
-
-@media (max-width: 600px) {
-  nav { padding: 0 1.25rem; }
-  section { padding: 4rem 1.25rem; }
-  .hero { padding: 64px 1.25rem 0; }
-  .blackout-banner { padding: 1.5rem 1.25rem; }
-  .blackout-divider { display: none; }
-  footer { padding: 1.5rem 1.25rem; }
-  .form-row { grid-template-columns: 1fr; }
-}
-
-/* LANGUAGE SYSTEM */
-[data-lang] { display: none; }
-.lang-en [data-lang="en"] { display: block; }
-.lang-pt [data-lang="pt"] { display: block; }
-span[data-lang] { display: none; }
-.lang-en span[data-lang="en"] { display: inline; }
-.lang-pt span[data-lang="pt"] { display: inline; }
-td[data-lang], th[data-lang] { display: none; }
-.lang-en td[data-lang="en"] { display: table-cell; }
-.lang-pt td[data-lang="pt"] { display: table-cell; }
-li[data-lang] { display: none; }
-.lang-en li[data-lang="en"] { display: flex; }
-.lang-pt li[data-lang="pt"] { display: flex; }
-```
-
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Archivo', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 52px;
+      mix-blend-mode: normal;
+    }
+
+    .nav-logo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 26px; height: 26px;
+      border: 1.5px solid var(--accent);
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-mark svg { width: 14px; height: 14px; color: var(--accent); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .nav-right a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-right a:hover { color: var(--white); }
+
+    .nav-right .nav-portal {
+      color: var(--white);
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 1px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 700px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 52px 80px;
+      overflow: hidden;
+    }
+
+    /* Full bleed dark image placeholder — replace src with actual generator room photo */
+    .hero-image {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.75) 60%, rgba(10,10,10,1) 100%),
+        linear-gradient(to right, rgba(10,10,10,0.6) 0%, transparent 60%),
+        url('https://images.unsplash.com/photo-1637296001293-43ec1ac4e5ed?fm=jpg&q=80&w=3000&auto=format&fit=crop') center/cover no-repeat;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+    }
+
+    .hero-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 28px; height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-headline {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(3.5rem, 8.5vw, 8.5rem);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 40px;
+    }
+
+    /* ─── STAT STRIP ─── */
+    .stat-strip {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin: 0 52px;
+      background: rgba(10,10,10,0.95);
+    }
+
+    .stat-item {
+      padding: 36px 40px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 3.2rem;
+      line-height: 1;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .stat-num.accent { color: var(--accent); }
+
+    .stat-desc {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    /* ─── SECTION BASE ─── */
+    .section {
+      padding: 140px 52px;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 60px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-tag span {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-tag::before {
+      content: attr(data-num);
+      color: var(--accent);
+    }
+
+    /* ─── EVENT SECTION ─── */
+    .event-section {
+      padding: 100px 52px;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .event-date {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(4rem, 9vw, 9rem);
+      line-height: 0.85;
+      text-transform: uppercase;
+      color: var(--white);
+      opacity: 0.06;
+      position: absolute;
+      right: 52px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .event-left {
+      position: relative;
+    }
+
+    .event-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pulse-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--red);
+      animation: pulse 2.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(1.5); }
+    }
+
+    .event-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.8rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .event-right p {
+      font-size: 1.05rem;
+      color: var(--dim);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 16px;
+      max-width: 480px;
+    }
+
+    .event-right p strong { color: var(--white); font-weight: 500; }
+
+    /* ─── HOW IT WORKS ─── */
+    .how-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      line-height: 0.92;
+      text-transform: uppercase;
+      margin-bottom: 80px;
+      max-width: 700px;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 1fr;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      align-items: start;
+      transition: background 0.3s;
+      cursor: default;
+    }
+
+    .step-row:hover {
+      background: rgba(240,237,232,0.02);
+    }
+
+    .step-row:last-child { border-bottom: 1px solid var(--border); }
+
+    .step-index {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      padding-top: 4px;
+    }
+
+    .step-name {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 2rem;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+
+    .step-body {
+      color: var(--dim);
+      font-size: 0.9rem;
+      line-height: 1.8;
+      font-weight: 300;
+      max-width: 400px;
+      padding-top: 6px;
+    }
+
+    /* ─── DIFFERENTIATORS ─── */
+    .diff-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      margin-bottom: 80px;
+      align-items: end;
+    }
+
+    .diff-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(2rem, 4.5vw, 4rem);
+      line-height: 0.92;
+      text-transform: uppercase;
+    }
+
+    .diff-subtitle {
+      color: var(--dim);
+      font-size: 1rem;
+      line-height: 1.8;
+      font-weight: 300;
+      max-width: 440px;
+    }
+
+    .diff-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--border);
+    }
+
+    .diff-item {
+      padding: 52px 40px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .diff-item:nth-child(3n) { border-right: none; }
+    .diff-item:nth-last-child(-n+3) { border-bottom: none; }
+
+    .diff-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .diff-item-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    .diff-item-text {
+      color: var(--dim);
+      font-size: 0.85rem;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    /* ─── COMPLIANCE ─── */
+    .compliance {
+      padding: 100px 52px;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .compliance-law {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(3rem, 6vw, 6rem);
+      line-height: 0.88;
+      text-transform: uppercase;
+      color: var(--white);
+      opacity: 0.12;
+    }
+
+    .compliance-right h3 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.8rem;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      line-height: 1;
+    }
+
+    .compliance-right p {
+      color: var(--dim);
+      font-size: 0.9rem;
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 12px;
+    }
+
+    .compliance-right p strong { color: var(--accent); font-weight: 500; }
+
+    /* ─── CTA ─── */
+    .cta {
+      padding: 160px 52px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-bg-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 18vw;
+      text-transform: uppercase;
+      color: var(--white);
+      opacity: 0.02;
+      letter-spacing: -0.04em;
+      pointer-events: none;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .cta h2 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+      line-height: 0.92;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .cta p {
+      color: var(--dim);
+      font-size: 1rem;
+      max-width: 420px;
+      margin: 0 auto 48px;
+      line-height: 1.75;
+      font-weight: 300;
+      position: relative;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      padding: 16px 36px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      position: relative;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      background: rgba(240,237,232,0.06);
+      color: var(--white);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 60px 52px 40px;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .footer-brand {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-brand p {
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.8rem;
+      color: var(--dim);
+      line-height: 1.7;
+      font-weight: 300;
+      letter-spacing: 0;
+      text-transform: none;
+      max-width: 280px;
+    }
+
+    .footer-col h5 {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 20px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-col ul a {
+      font-size: 0.85rem;
+      color: var(--white);
+      text-decoration: none;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .footer-col ul a:hover { opacity: 1; }
+
+    .footer-bottom {
+      margin-top: 60px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      grid-column: 1 / -1;
+    }
+
+    .footer-bottom p {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    /* ─── STICKY BAR ─── */
+    .sticky-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 300;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--border);
+      background: rgba(10,10,10,0.96);
+      backdrop-filter: blur(16px);
+    }
+
+    .sticky-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .sticky-btn:first-child {
+      color: var(--black);
+      background: var(--white);
+      border-right: 1px solid var(--border);
+    }
+
+    .sticky-btn:first-child:hover { background: var(--accent); }
+
+    .sticky-btn:last-child {
+      color: var(--white);
+      background: transparent;
+    }
+
+    .sticky-btn:last-child:hover { background: rgba(240,237,232,0.06); }
+
+    /* push page content above sticky bar */
+    body { padding-bottom: 64px; }
+
+    /* ─── SCROLL ANIMATION ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.in { opacity: 1; transform: none; }
+    .reveal.d1 { transition-delay: 0.1s; }
+    .reveal.d2 { transition-delay: 0.2s; }
+    .reveal.d3 { transition-delay: 0.3s; }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 20px 20px; }
+      .nav-right { gap: 20px; }
+      .nav-right a:not(.nav-portal) { display: none; }
+
+      .hero { padding: 0 20px 60px; }
+      .stat-strip { grid-template-columns: 1fr 1fr; margin: 0 20px; }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3) { border-top: 1px solid var(--border); }
+
+      .section { padding: 80px 20px; }
+      .event-section { padding: 80px 20px; grid-template-columns: 1fr; gap: 40px; }
+      .step-row { grid-template-columns: 50px 1fr; }
+      .step-body { display: none; }
+      .diff-header { grid-template-columns: 1fr; gap: 24px; }
+      .diff-grid { grid-template-columns: 1fr; }
+      .diff-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .compliance { grid-template-columns: 1fr; padding: 80px 20px; gap: 40px; }
+      .cta { padding: 100px 20px; }
+      footer { grid-template-columns: 1fr; padding: 60px 20px 40px; gap: 40px; }
+      .footer-bottom { flex-direction: column; gap: 10px; align-items: flex-start; }
+    }
   </style>
 </head>
-<body class="lang-pt">
+<body>
 
 <!-- NAV -->
-
 <nav>
-  <a href="#" class="nav-logo">
-    <span class="dot"></span>
+  <a href="/" class="nav-logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 14 14" fill="none">
+        <path d="M1 4l6-3 6 3v4.5c0 3-2.5 5.5-6 6.5-3.5-1-6-3.5-6-6.5V4z" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M4 9l1.5 2 3.5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
     GenGuardian
   </a>
   <div class="nav-right">
-    <div class="lang-toggle">
-      <button onclick="setLang('en')">EN</button>
-      <button class="active" onclick="setLang('pt')">PT</button>
-    </div>
-    <a href="https://hosting.genguardian.pt" target="_blank" class="nav-login">
-      <span data-lang="en">Login</span>
-      <span data-lang="pt">Entrar</span>
-    </a>
-    <a href="#contact" class="nav-cta">
-      <span data-lang="en">Book a Call</span>
-      <span data-lang="pt">Agendar Reunião</span>
-    </a>
+    <a href="#how">How It Works</a>
+    <a href="support.html">Support</a>
+    <a href="https://hosting.genguardian.pt" target="_blank" class="nav-portal">Client Portal →</a>
   </div>
 </nav>
 
 <!-- HERO -->
-
-<section class="hero" id="home">
-  <div class="hero-inner">
-    <div class="hero-copy fade-up">
-      <div class="hero-tag">
-        <span data-lang="en">Generator Monitoring · Portugal</span>
-        <span data-lang="pt">Monitorização de Geradores · Portugal</span>
-      </div>
-      <h1 data-lang="en">Your Generator<br><em>Starts.</em><br>Every Time.</h1>
-      <h1 data-lang="pt">O Seu Gerador<br><em>Arranca.</em><br>Sempre.</h1>
-      <p class="hero-sub" data-lang="en">Real-time SIM-based IoT monitoring for standby generators. Fully independent of building WiFi and power — works precisely when everything else fails.</p>
-      <p class="hero-sub" data-lang="pt">Monitorização IoT em tempo real via SIM para geradores de reserva. Totalmente independente da rede WiFi e energia do edifício — funciona exactamente quando tudo o resto falha.</p>
-      <div class="hero-actions">
-        <a href="#contact" class="btn-primary">
-          <span data-lang="en">Book a Call →</span>
-          <span data-lang="pt">Agendar Reunião →</span>
-        </a>
-        <a href="#how-it-works" class="btn-secondary">
-          <span data-lang="en">See How It Works</span>
-          <span data-lang="pt">Como Funciona</span>
-        </a>
-      </div>
-    </div>
-    <div class="status-panel">
-      <div class="status-panel-header">
-        <span>UNIT-0042 · HOTEL LISBOA</span>
-        <span class="status-live">LIVE</span>
-      </div>
-      <div class="status-rows">
-        <div class="status-row">
-          <span class="status-label">GENERATOR STATUS</span>
-          <span class="status-val ok">● STANDBY READY</span>
-        </div>
-        <div class="status-row">
-          <span class="status-label">LAST TEST RUN</span>
-          <span class="status-val">14 Apr · 03:00</span>
-        </div>
-        <div class="status-row">
-          <span class="status-label">FUEL LEVEL</span>
-          <span class="status-val warn">⚠ 34%</span>
-        </div>
-        <div class="status-row">
-          <span class="status-label">BATTERY VOLTAGE</span>
-          <span class="status-val ok">12.8V</span>
-        </div>
-        <div class="status-row">
-          <span class="status-label">SIGNAL</span>
-          <span class="status-val ok">4G · –72 dBm</span>
-        </div>
-        <div class="status-row">
-          <span class="status-label">UPTIME</span>
-          <span class="status-val">99.97% · 180d</span>
-        </div>
-      </div>
-      <div class="alert-banner">FAULT DETECTED · SMS DISPATCHED · 09:14:22</div>
-    </div>
+<section class="hero">
+  <div class="hero-image"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Generator Monitoring</div>
+    <h1 class="hero-headline">
+      Your<br/>generator<br/>starts.
+    </h1>
   </div>
 </section>
 
-<!-- BLACKOUT BANNER -->
-
-<div class="blackout-banner">
-  <div class="blackout-label" data-lang="en">April 28, 2025 — Iberian Blackout</div>
-  <div class="blackout-label" data-lang="pt">28 de abril de 2025 — Apagão Ibérico</div>
-  <div class="blackout-inner">
-    <div class="blackout-stat">
-      <span class="num">58M</span>
-      <span class="lbl" data-lang="en">People Affected</span>
-      <span class="lbl" data-lang="pt">Pessoas Afetadas</span>
-    </div>
-    <div class="blackout-divider"></div>
-    <div class="blackout-stat">
-      <span class="num">€2B</span>
-      <span class="lbl" data-lang="en">Losses to PT Businesses</span>
-      <span class="lbl" data-lang="pt">Perdas para Empresas PT</span>
-    </div>
-    <div class="blackout-divider"></div>
-    <div class="blackout-stat">
-      <span class="num">1,710</span>
-      <span class="lbl" data-lang="en">Businesses Surveyed (AIP)</span>
-      <span class="lbl" data-lang="pt">Empresas Inquiridas (AIP)</span>
-    </div>
+<!-- STAT STRIP -->
+<div class="stat-strip">
+  <div class="stat-item">
+    <div class="stat-num">€2B</div>
+    <div class="stat-desc">Business losses<br/>April 28 blackout</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">58M</div>
+    <div class="stat-desc">People without power<br/>Portugal & Spain</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num accent">0</div>
+    <div class="stat-desc">WiFi monitors<br/>still online</div>
   </div>
 </div>
 
-<!-- PROBLEM -->
-
-<section id="problem">
-  <div class="section-inner">
-    <div class="section-tag" data-lang="en">The Problem</div>
-    <div class="section-tag" data-lang="pt">O Problema</div>
-    <h2 data-lang="en">Silent <em>Failures</em><br>Cost Everything</h2>
-    <h2 data-lang="pt">Falhas <em>Silenciosas</em><br>Custam Tudo</h2>
-    <p class="section-lead" data-lang="en">Hospitals, hotels, and commercial buildings are legally required to have backup generators. But nobody's watching them — until the power goes out and they don't start.</p>
-    <p class="section-lead" data-lang="pt">Hospitais, hotéis e edifícios comerciais são legalmente obrigados a ter geradores de emergência. Mas ninguém os monitoriza — até à próxima falha de energia.</p>
-    <div class="problem-grid">
-      <div class="problem-card fade-up">
-        <span class="badge badge-red" data-lang="en">Legal Risk</span>
-        <span class="badge badge-red" data-lang="pt">Risco Legal</span>
-        <span class="icon">⚖️</span>
-        <h3 data-lang="en">Mandatory Compliance</h3>
-        <h3 data-lang="pt">Obrigatoriedade Legal</h3>
-        <p data-lang="en">Artigo 72º, Portaria 1532/2008 (RT-SCIE) mandates emergency backup power in hotels, hospitals, and large commercial buildings. Non-compliance is a liability.</p>
-        <p data-lang="pt">O Artigo 72º, Portaria 1532/2008 (RT-SCIE) exige alimentação de emergência em hotéis, hospitais e edifícios comerciais. O incumprimento é uma responsabilidade legal.</p>
-      </div>
-      <div class="problem-card fade-up">
-        <span class="badge badge-blue" data-lang="en">Hidden Risk</span>
-        <span class="badge badge-blue" data-lang="pt">Risco Oculto</span>
-        <span class="icon">🔇</span>
-        <h3 data-lang="en">Silent Generator Failure</h3>
-        <h3 data-lang="pt">Falha Silenciosa</h3>
-        <p data-lang="en">Generators sit idle for months. Battery dies. Fuel degrades. Nobody notices — until a blackout reveals the generator won't start.</p>
-        <p data-lang="pt">Os geradores ficam parados durante meses. A bateria descarrega. O combustível degrada-se. Ninguém nota — até um apagão revelar que o gerador não arranca.</p>
-      </div>
-      <div class="problem-card fade-up">
-        <span class="badge badge-red" data-lang="en">Blind Spot</span>
-        <span class="badge badge-red" data-lang="pt">Ponto Cego</span>
-        <span class="icon">📡</span>
-        <h3 data-lang="en">WiFi Monitoring Fails</h3>
-        <h3 data-lang="pt">WiFi Falha no Momento Certo</h3>
-        <p data-lang="en">OEM monitoring systems (Generac, etc.) run over building WiFi. During a blackout — when you need them most — they go offline too.</p>
-        <p data-lang="pt">Os sistemas de monitorização OEM (Generac, etc.) usam o WiFi do edifício. Durante um apagão — quando mais precisa deles — também ficam sem sinal.</p>
-      </div>
+<!-- APRIL 28 EVENT -->
+<section class="event-section reveal">
+  <div class="event-left">
+    <div class="event-label">
+      <div class="pulse-dot"></div>
+      Last major grid failure
     </div>
+    <h2 class="event-title">April 28,<br/>2025.</h2>
+  </div>
+  <div class="event-right">
+    <p>The Iberian blackout knocked out power for <strong>58 million people</strong> across Portugal and Spain. Portuguese businesses reported <strong>€2 billion in losses</strong>.</p>
+    <p>Every WiFi-dependent generator monitor went dark at exactly the moment it was needed. Backup generators failed silently. Nobody knew.</p>
+    <p>The next one is not a question of if.</p>
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
+<section class="section reveal" id="how">
+  <div class="section-tag" data-num="01 —">How It Works</div>
+  <h2 class="how-title">Three steps.<br/>Zero blind spots.</h2>
 
-<section id="how-it-works">
-  <div class="section-inner">
-    <div class="section-tag" data-lang="en">Solution</div>
-    <div class="section-tag" data-lang="pt">Solução</div>
-    <h2 data-lang="en">How <em>GenGuardian</em><br>Works</h2>
-    <h2 data-lang="pt">Como o <em>GenGuardian</em><br>Funciona</h2>
-    <p class="section-lead" data-lang="en">Three steps. No infrastructure changes. Works on any generator, any brand, any age.</p>
-    <p class="section-lead" data-lang="pt">Três passos. Sem alterações na infraestrutura. Funciona em qualquer gerador, de qualquer marca, de qualquer idade.</p>
-    <div class="steps">
-      <div class="step fade-up">
-        <div class="step-num">01</div>
-        <div class="step-content">
-          <h3 data-lang="en">Install the Device</h3>
-          <h3 data-lang="pt">Instalar o Dispositivo</h3>
-          <p data-lang="en">Our own state of the art IoT unit is wired to your generator. No WiFi. No internet connection required at the building level. Takes under an hour.</p>
-          <p data-lang="pt">O nosso dispositivo IoT de última geração é ligado directamente ao seu gerador. Sem WiFi. Sem necessidade de ligação à internet no edifício. Demora menos de uma hora.</p>
-          <span class="mono-detail">⚡ Weather Proof · 4G LTE · Internal Battery</span>
-        </div>
-      </div>
-      <div class="step fade-up">
-        <div class="step-num">02</div>
-        <div class="step-content">
-          <h3 data-lang="en">Monitor in Real Time</h3>
-          <h3 data-lang="pt">Monitorização em Tempo Real</h3>
-          <p data-lang="en">The device transmits generator status over its own cellular SIM — completely independent of building power and WiFi. Battery backup ensures it keeps transmitting even during a total power failure.</p>
-          <p data-lang="pt">O dispositivo transmite o estado do gerador através do seu próprio cartão SIM — completamente independente da energia e WiFi do edifício. A bateria interna garante transmissão mesmo durante uma falha total de energia.</p>
-          <span class="mono-detail">📶 Cellular SIM · 130+ Countries · No Roaming</span>
-        </div>
-      </div>
-      <div class="step fade-up">
-        <div class="step-num">03</div>
-        <div class="step-content">
-          <h3 data-lang="en">Instant Fault Alerts</h3>
-          <h3 data-lang="pt">Alertas Imediatos de Falha</h3>
-          <p data-lang="en">The moment a fault is detected — generator won't start, low fuel, battery failure — your manager receives an automatic SMS alert. By the time anyone on-site notices something's wrong, the call to fix it is already made.</p>
-          <p data-lang="pt">O momento em que uma falha é detetada — o gerador não arranca, combustível baixo, falha na bateria — o seu gestor recebe automaticamente um SMS. Quando alguém no local se apercebe que há um problema, a ordem para o resolver já foi dada.</p>
-          <span class="mono-detail">📱 Automatic SMS · Voice Alerts · 24/7</span>
-        </div>
-      </div>
+  <div class="steps-list">
+    <div class="step-row reveal d1">
+      <span class="step-index">01</span>
+      <span class="step-name">Install</span>
+      <p class="step-body">The GenGuardian unit mounts directly on your generator. No WiFi, no infrastructure changes, no proprietary hardware. Works on any generator, any brand, any age. Under an hour on site.</p>
+    </div>
+    <div class="step-row reveal d2">
+      <span class="step-index">02</span>
+      <span class="step-name">Monitor</span>
+      <p class="step-body">The device transmits generator status over 4G cellular with internal battery backup. Your dashboard shows live status across every unit in your portfolio, around the clock.</p>
+    </div>
+    <div class="step-row reveal d3">
+      <span class="step-index">03</span>
+      <span class="step-name">Alert</span>
+      <p class="step-body">The moment a fault is detected — failure to start, unexpected shutdown, low fuel — an SMS fires instantly to your service team. Not the building owner. You own the relationship.</p>
     </div>
   </div>
 </section>
 
-<!-- WHY GENGUARDIAN + COMPARISON -->
+<!-- DIFFERENTIATORS -->
+<section class="section reveal">
+  <div class="diff-header">
+    <h2 class="diff-title">A monitor that<br/>goes offline in a<br/>blackout is useless.</h2>
+    <p class="diff-subtitle">GenGuardian runs on cellular with internal battery backup. It works precisely when the grid doesn't.</p>
+  </div>
 
-<section class="why-bg" id="why">
-  <div class="section-inner">
-    <div class="section-tag" data-lang="en">Why GenGuardian</div>
-    <div class="section-tag" data-lang="pt">Porquê GenGuardian</div>
-    <h2 data-lang="en">Built on <em>Proven</em><br>Experience</h2>
-    <h2 data-lang="pt">Construído com<br><em>Experiência Comprovada</em></h2>
-    <p class="section-lead" data-lang="en">Purpose-built for the Portuguese market. Every feature exists because a generator that fails silently is worse than no generator at all.</p>
-    <p class="section-lead" data-lang="pt">Desenvolvido para o mercado português. Cada funcionalidade existe porque um gerador que falha em silêncio é pior do que não ter gerador de todo.</p>
-    <div class="why-grid">
-      <div class="why-card fade-up">
-        <div class="why-icon">🔋</div>
-        <h3 data-lang="en">Internal Battery</h3>
-        <h3 data-lang="pt">Bateria Interna</h3>
-        <p data-lang="en">Stays online even if the generator fails to start. 1,000mAh — keeps transmitting through a total power loss.</p>
-        <p data-lang="pt">Mantém-se online mesmo que o gerador não arranque. 1.000mAh — continua a transmitir durante uma falha total de energia.</p>
-      </div>
-      <div class="why-card fade-up">
-        <div class="why-icon">📡</div>
-        <h3 data-lang="en">Own SIM · No WiFi</h3>
-        <h3 data-lang="pt">SIM Próprio · Sem WiFi</h3>
-        <p data-lang="en">4G LTE with Teltonika SIM. 130+ countries, no roaming fees. Zero dependency on building infrastructure.</p>
-        <p data-lang="pt">4G LTE com SIM Teltonika. 130+ países, sem custos de roaming. Zero dependência da infraestrutura do edifício.</p>
-      </div>
-      <div class="why-card fade-up">
-        <div class="why-icon">🔧</div>
-        <h3 data-lang="en">Any Generator</h3>
-        <h3 data-lang="pt">Qualquer Gerador</h3>
-        <p data-lang="en">Brand-agnostic. Generac, Kohler, Cummins — or no-name. Any age. No infrastructure changes required.</p>
-        <p data-lang="pt">Agnóstico de marca. Generac, Kohler, Cummins — ou qualquer outra. Qualquer idade. Sem alterações necessárias.</p>
-      </div>
-      <div class="why-card fade-up">
-        <div class="why-icon">📋</div>
-        <h3 data-lang="en">RT-SCIE Compliance</h3>
-        <h3 data-lang="pt">Conformidade RT-SCIE</h3>
-        <p data-lang="en">Continuous monitoring and event logging to demonstrate compliance with Artigo 72º, Portaria 1532/2008. Your liability, covered.</p>
-        <p data-lang="pt">Monitorização contínua e registo de eventos para demonstrar conformidade com o Artigo 72º, Portaria 1532/2008. A sua responsabilidade, coberta.</p>
-      </div>
+  <div class="diff-grid">
+    <div class="diff-item reveal">
+      <div class="diff-num">— 01</div>
+      <div class="diff-item-title">Cellular + Battery Backup</div>
+      <p class="diff-item-text">Fully independent of building power and WiFi. Online when everything else is offline.</p>
     </div>
-
-```
-<h2 data-lang="en" style="margin-top:3rem">Why Nothing<br><em>Else Works</em></h2>
-<h2 data-lang="pt" style="margin-top:3rem">Porque Nada<br><em>Mais Funciona</em></h2>
-<div style="overflow-x:auto">
-  <table class="comp-table">
-    <thead>
-      <tr>
-        <th><span data-lang="en">Feature</span><span data-lang="pt">Funcionalidade</span></th>
-        <th class="highlight">GenGuardian</th>
-        <th><span data-lang="en">WiFi Monitoring</span><span data-lang="pt">Monitorização WiFi</span></th>
-        <th><span data-lang="en">Manual Checks</span><span data-lang="pt">Verificações Manuais</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span data-lang="en">Works during a blackout</span><span data-lang="pt">Funciona durante apagão</span></td>
-        <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td>
-      </tr>
-      <tr>
-        <td><span data-lang="en">Real-time fault alerts</span><span data-lang="pt">Alertas de falha em tempo real</span></td>
-        <td><span class="check">✓</span></td>
-        <td><span data-lang="en" class="partial">Partial</span><span data-lang="pt" class="partial">Parcial</span></td>
-        <td><span class="cross">✗</span></td>
-      </tr>
-      <tr>
-        <td><span data-lang="en">Brand agnostic</span><span data-lang="pt">Agnóstico de marca</span></td>
-        <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td>
-      </tr>
-      <tr>
-        <td><span data-lang="en">No infrastructure changes</span><span data-lang="pt">Sem alterações na infraestrutura</span></td>
-        <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td>
-      </tr>
-      <tr>
-        <td><span data-lang="en">Automatic service dispatch</span><span data-lang="pt">Despacho automático de serviço</span></td>
-        <td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td>
-      </tr>
-      <tr>
-        <td><span data-lang="en">Predictable monthly cost</span><span data-lang="pt">Custo mensal previsível</span></td>
-        <td><span class="check">✓</span></td>
-        <td><span data-lang="en" class="partial">Varies</span><span data-lang="pt" class="partial">Variável</span></td>
-        <td><span class="cross">✗</span></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-```
-
+    <div class="diff-item reveal d1">
+      <div class="diff-num">— 02</div>
+      <div class="diff-item-title">Brand-Agnostic</div>
+      <p class="diff-item-text">Any generator, any brand, any age. No proprietary lock-in, no replacement hardware required.</p>
+    </div>
+    <div class="diff-item reveal d2">
+      <div class="diff-num">— 03</div>
+      <div class="diff-item-title">Alerts to Your Team</div>
+      <p class="diff-item-text">SMS dispatched directly to the contracted service company. You stay in control of every client.</p>
+    </div>
   </div>
 </section>
 
-<!-- CONTACT -->
-
-<section id="contact">
-  <div class="section-inner">
-    <div class="section-tag" data-lang="en">Contact</div>
-    <div class="section-tag" data-lang="pt">Contacto</div>
-    <h2 data-lang="en">Let's <em>Talk</em></h2>
-    <h2 data-lang="pt">Vamos <em>Falar</em></h2>
-    <div class="contact-grid">
-      <div class="contact-info fade-up">
-        <h3 data-lang="en">Book a Call or Send a Message</h3>
-        <h3 data-lang="pt">Agendar uma Reunião ou Enviar Mensagem</h3>
-        <p data-lang="en">Whether you manage a hotel, hospital, commercial building, or you're a generator service company — we'd like to talk. No pressure, no sales deck. Just a 20-minute conversation.</p>
-        <p data-lang="pt">Seja gestor de hotel, hospital, edifício comercial, ou empresa de serviços de geradores — queremos conversar. Sem pressão. Apenas uma conversa de 20 minutos.</p>
-        <div class="contact-detail">
-          <span class="cd-icon">✉️</span>
-          <div>
-            <span class="cd-label" data-lang="en">Email</span>
-            <span class="cd-label" data-lang="pt">Email</span>
-            <span class="cd-val">miguel@genguardian.pt</span>
-          </div>
-        </div>
-        <div class="contact-detail">
-          <span class="cd-icon">🌐</span>
-          <div>
-            <span class="cd-label" data-lang="en">VAT Number</span>
-            <span class="cd-label" data-lang="pt">NIF</span>
-            <span class="cd-val">518072371</span>
-          </div>
-        </div>
-        <div class="contact-detail">
-          <span class="cd-icon">📍</span>
-          <div>
-            <span class="cd-label" data-lang="en">Location</span>
-            <span class="cd-label" data-lang="pt">Localização</span>
-            <span class="cd-val">Lisboa, Portugal</span>
-          </div>
-        </div>
-      </div>
-      <div class="fade-up">
-        <form
-          id="contactForm"
-          class="contact-form"
-          action="https://formspree.io/f/mdayepay"
-          method="POST"
-        >
-          <div class="form-row">
-            <div class="form-group">
-              <label data-lang="en">Name</label>
-              <label data-lang="pt">Nome</label>
-              <input type="text" name="name" placeholder="João Silva" required />
-            </div>
-            <div class="form-group">
-              <label data-lang="en">Company</label>
-              <label data-lang="pt">Empresa</label>
-              <input type="text" name="company" placeholder="Hotel Lisboa" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" name="email" placeholder="joao@empresa.pt" required />
-          </div>
-          <div class="form-group">
-            <label data-lang="en">I am a...</label>
-            <label data-lang="pt">Sou um(a)...</label>
-            <select name="type">
-              <option value="" data-lang="en">Select type...</option>
-              <option value="" data-lang="pt">Selecionar tipo...</option>
-              <option value="Hotel / Hospitality">Hotel / Hospitality</option>
-              <option value="Hospital / Healthcare">Hospital / Healthcare</option>
-              <option value="Commercial Building">Commercial Building</option>
-              <option value="Generator Service Company">Generator Service Company</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label data-lang="en">Message (optional)</label>
-            <label data-lang="pt">Mensagem (opcional)</label>
-            <textarea name="message" placeholder="..."></textarea>
-          </div>
-          <input type="hidden" name="_language" id="formLang" value="pt" />
-          <input type="hidden" name="_next" value="https://genguardian.pt/#contact" />
-          <button type="submit" class="submit-btn" id="submitBtn">
-            <span data-lang="en">Send Message →</span>
-            <span data-lang="pt">Enviar Mensagem →</span>
-          </button>
-          <p class="form-error" id="formError">
-            <span data-lang="en">Something went wrong. Please try again or email miguel@genguardian.pt</span>
-            <span data-lang="pt">Algo correu mal. Tente novamente ou envie email para miguel@genguardian.pt</span>
-          </p>
-          <p class="form-note" data-lang="en">We'll respond within 1 business day.</p>
-          <p class="form-note" data-lang="pt">Respondemos em 1 dia útil.</p>
-        </form>
-
-```
-    <div class="form-success" id="formSuccess">
-      <div class="success-icon">✓</div>
-      <h3 data-lang="en">Message Sent</h3>
-      <h3 data-lang="pt">Mensagem Enviada</h3>
-      <p data-lang="en">We'll be in touch within 1 business day.</p>
-      <p data-lang="pt">Entraremos em contacto em 1 dia útil.</p>
-    </div>
+<!-- COMPLIANCE -->
+<div class="compliance reveal">
+  <div class="compliance-law">
+    Portaria<br/>1532/<br/>2008
+  </div>
+  <div class="compliance-right">
+    <h3>Legally Required.<br/>Not Optional.</h3>
+    <p><strong>Artigo 72º, Portaria 1532/2008 (RT-SCIE)</strong> mandates verified emergency backup power in hotels, hospitals, and large commercial buildings.</p>
+    <p>Monitoring your generator is not just best practice. It is a legal obligation your clients already have. GenGuardian is the compliance layer they are missing.</p>
   </div>
 </div>
-```
 
+<!-- CTA -->
+<section class="cta reveal">
+  <div class="cta-bg-text">Start</div>
+  <h2>The next blackout<br/>is not a question of if.</h2>
+  <p>GenGuardian makes sure your generator starts — and you know the moment something goes wrong.</p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+    <a href="mailto:support@genguardian.pt" class="btn">Get in Touch →</a>
+    <a href="#how" class="btn btn-outline">How It Works</a>
   </div>
 </section>
 
 <!-- FOOTER -->
-
 <footer>
-  <div class="footer-logo">GENGUARDIAN · PORTUGAL</div>
-  <div class="footer-meta">AG — Azores Generators · NIF 518072371</div>
-  <div class="footer-legal">
-    <span data-lang="en">© 2026 GenGuardian Portugal · Lisboa</span>
-    <span data-lang="pt">© 2026 GenGuardian Portugal · Lisboa</span>
+  <div class="footer-brand">
+    GenGuardian
+    <p>Cellular IoT generator monitoring for commercial and institutional buildings. Lisbon, Portugal.</p>
+  </div>
+  <div class="footer-col">
+    <h5>Product</h5>
+    <ul>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="https://hosting.genguardian.pt" target="_blank">Client Portal</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h5>Company</h5>
+    <ul>
+      <li><a href="support.html">Support</a></li>
+      <li><a href="mailto:support@genguardian.pt">Contact</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 GenGuardian — AG Azores Generators, Tecnologias e Investimentos, Lda</p>
+    <p>genguardian.pt</p>
   </div>
 </footer>
 
+<!-- STICKY BAR -->
+<div class="sticky-bar">
+  <a href="https://hosting.genguardian.pt" target="_blank" class="sticky-btn">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="4" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 4V3a3 3 0 0 1 6 0v1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Client Login
+  </a>
+  <a href="support.html" class="sticky-btn">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M7 10v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M5 5.5a2 2 0 1 1 2 2v1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Support
+  </a>
+</div>
+
 <script>
-  function setLang(lang) {
-    document.body.className = 'lang-' + lang;
-    document.getElementById('formLang').value = lang;
-    document.querySelectorAll('.lang-toggle button').forEach((btn, i) => {
-      btn.classList.toggle('active', (i === 0 && lang === 'en') || (i === 1 && lang === 'pt'));
-    });
-  }
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-  const form = document.getElementById('contactForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const formError = document.getElementById('formError');
-
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    submitBtn.disabled = true;
-    formError.style.display = 'none';
-    const data = new FormData(form);
-    try {
-      const res = await fetch('https://formspree.io/f/mdayepay', {
-        method: 'POST',
-        body: data,
-        headers: { 'Accept': 'application/json' }
-      });
-      if (res.ok) {
-        form.style.display = 'none';
-        document.getElementById('formSuccess').style.display = 'block';
-      } else {
-        formError.style.display = 'block';
-        submitBtn.disabled = false;
-      }
-    } catch (err) {
-      formError.style.display = 'block';
-      submitBtn.disabled = false;
-    }
-  });
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 </script>
-
 </body>
 </html>
