@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/techsupport", "destination": "/support.html", "permanent": false },
+    { "source": "/help", "destination": "/support.html", "permanent": false }
+  ]
+}
